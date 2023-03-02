@@ -43,11 +43,11 @@ fun Body(
         LogoImage()
         Spacer(modifier = Modifier.size(95.dp))
         UserInput(email) {
-            loginViewModel.onLoginChange(email)
+            loginViewModel.onLoginChange(it)
         }
         Spacer(modifier = Modifier.size(40.dp))
         PasswordInput(password) {
-            loginViewModel.onPasswordChange(password)
+            loginViewModel.onPasswordChange(it)
         }
         Spacer(modifier = Modifier.size(5.dp))
         ForgetPassword(Modifier.align(Alignment.End))
