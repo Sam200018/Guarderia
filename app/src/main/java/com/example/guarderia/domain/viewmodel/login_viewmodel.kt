@@ -14,6 +14,8 @@ val tutorUsers: HashMap<String, User> = hashMapOf(
     "samuelbaubas@gmail.com" to User("Samuel", "tutor@", "sabb2006"),
     "hpelayoc@gmail.com" to User("Carlos", "tutor@", "cahp2707"),
     "brendamateos.prim@gmail.com" to User("Brenda", "teacher", "sabb2006"),
+    "pruebatutor@mail.com" to User("Pablo","tutor@","cont1234"),
+    "pruebaprofe@mail.com" to User("Emanuel","teacher","cont1234"),
 )
 
 
