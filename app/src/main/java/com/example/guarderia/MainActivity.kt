@@ -6,11 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.guarderia.domain.viewmodel.LoginViewModel
+import com.example.guarderia.ui.routes.Routes
+import com.example.guarderia.ui.screens.ChildrenScreen
 import com.example.guarderia.ui.screens.LoginScreen
 import com.example.guarderia.ui.theme.GuarderiaTheme
 
@@ -24,22 +26,16 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    LoginScreen(LoginViewModel())
+                    val navigator = rememberNavController()
+                    NavHost(navController = navigator, startDestination = Routes.LoginScreen.route) {
+                        composable(Routes.LoginScreen.route) { LoginScreen(LoginViewModel(navigator)) }
+                        composable(Routes.ChildrenScreen.route) { ChildrenScreen() }
+                    }
+
                 }
             }
         }
     }
 }
 
-//@Composable
-//fun Greeting(name: String) {
-//    Text(text = "Hola $name!!! ")
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun DefaultPreview() {
-//    GuarderiaTheme {
-//        Greeting("Android")
-//    }
-//}
+
