@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
                             val type = it.arguments?.getString("type")
 
                             if (userEmail != null && type != null) {
-                                ChildrenScreen(userEmail, type)
+                                ChildrenScreen(ChildrenViewModel(navigator), userEmail, type)
                             }
                         }
 

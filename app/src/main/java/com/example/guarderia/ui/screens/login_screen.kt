@@ -1,6 +1,5 @@
 package com.example.guarderia.ui.screens
 
-import android.os.Message
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -21,6 +20,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.guarderia.domain.viewmodel.LoginViewModel
@@ -77,7 +77,6 @@ fun Body(
 
     }
 }
-
 
 @Composable
 fun LogoImage() {
