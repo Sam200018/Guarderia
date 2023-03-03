@@ -9,13 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ChildrenScreen() {
+fun ChildrenScreen(userEmail:String,type:String) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(20.dp)
     ) {
 
-        Text("Selection screen")
+        Text("Selection screen $userEmail, $type")
     }
 }

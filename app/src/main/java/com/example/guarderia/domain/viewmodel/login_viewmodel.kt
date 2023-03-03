@@ -62,7 +62,7 @@ class LoginViewModel(private val navigator: NavHostController) : ViewModel() {
         var userKey = tutorUsers.get(key = _email.value)
         if (userKey != null) {
             if (userKey.password == _password.value) {
-                navigator.navigate(Routes.ChildrenScreen.route)
+                navigator.navigate("${Routes.ChildrenScreen.route}/${_email.value}/${userKey.type}")
             } else {
                 _errorMessage.value = "Error! Credenciales incorrectas"
 

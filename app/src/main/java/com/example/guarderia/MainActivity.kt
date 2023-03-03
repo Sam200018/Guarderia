@@ -29,7 +29,15 @@ class MainActivity : ComponentActivity() {
                     val navigator = rememberNavController()
                     NavHost(navController = navigator, startDestination = Routes.LoginScreen.route) {
                         composable(Routes.LoginScreen.route) { LoginScreen(LoginViewModel(navigator)) }
-                        composable(Routes.ChildrenScreen.route) { ChildrenScreen() }
+
+                        composable("${Routes.ChildrenScreen.route}/{userEmail}/{type}") {
+                            val userEmail = it.arguments?.getString("userEmail")
+                            val type = it.arguments?.getString("type")
+
+                            if (userEmail != null && type != null) {
+                                ChildrenScreen(userEmail, type)
+                            }
+                        }
                     }
 
                 }
