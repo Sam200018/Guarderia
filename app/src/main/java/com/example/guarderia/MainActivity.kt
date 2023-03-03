@@ -14,6 +14,7 @@ import com.example.guarderia.domain.viewmodel.LoginViewModel
 import com.example.guarderia.ui.routes.Routes
 import com.example.guarderia.ui.screens.ChildrenScreen
 import com.example.guarderia.ui.screens.LoginScreen
+import com.example.guarderia.ui.screens.ReportCarerScreen
 import com.example.guarderia.ui.theme.GuarderiaTheme
 
 class MainActivity : ComponentActivity() {
@@ -37,6 +38,11 @@ class MainActivity : ComponentActivity() {
                             if (userEmail != null && type != null) {
                                 ChildrenScreen(userEmail, type)
                             }
+                        }
+
+                        composable(Routes.ReportCarerScreen.route) {
+
+                            ReportCarerScreen()
                         }
                     }
 
