@@ -44,7 +44,7 @@ fun Body(
     loginViewModel: LoginViewModel
 ) {
 
-    val scrollState = rememberScrollState()
+
 
     val email: String by loginViewModel.email.observeAsState(initial = "")
     val isEmailValid: Boolean by loginViewModel.isEmailValid.observeAsState(true)
@@ -55,7 +55,7 @@ fun Body(
     val errorMessage: String by loginViewModel.errorMessage.observeAsState("")
 
 
-    Column(modifier = modifier.verticalScroll(scrollState)) {
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         LogoImage()
         Spacer(modifier = Modifier.size(95.dp))
         UserInput(email, isEmailValid) {
