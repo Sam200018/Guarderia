@@ -1,6 +1,5 @@
 package com.example.guarderia.ui.screens
 
-import android.os.Message
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -41,9 +40,8 @@ fun LoginScreen(loginViewModel: LoginViewModel) {
 @Composable
 fun Body(
     modifier: Modifier,
-    loginViewModel: LoginViewModel
+    loginViewModel: LoginViewModel,
 ) {
-
 
 
     val email: String by loginViewModel.email.observeAsState(initial = "")
@@ -71,7 +69,11 @@ fun Body(
         LoginButton(
             Modifier.align(Alignment.CenterHorizontally),
             isEnable = isLoginEnable,
-            loginClick = { loginViewModel.login() },
+            loginClick = {
+                loginViewModel.login()
+//                reportCarerViewMode(
+
+            },
             errorMessage = errorMessage
         )
 
