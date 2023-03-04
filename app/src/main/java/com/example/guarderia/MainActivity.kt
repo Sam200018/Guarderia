@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.guarderia.domain.viewmodel.ChildrenViewModel
 import com.example.guarderia.domain.viewmodel.LoginViewModel
 import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
 import com.example.guarderia.ui.routes.Routes
@@ -37,7 +38,7 @@ class MainActivity : ComponentActivity() {
                             val type = it.arguments?.getString("type")
 
                             if (userEmail != null && type != null) {
-                                ChildrenScreen(userEmail, type)
+                                ChildrenScreen(ChildrenViewModel(navigator), userEmail, type)
                             }
                         }
 
