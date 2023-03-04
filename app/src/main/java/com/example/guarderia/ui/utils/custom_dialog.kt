@@ -1,22 +1,15 @@
 package com.example.guarderia.ui.utils
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-@Preview(showBackground = true)
+
 @Composable
-fun CustomDialog(onTextChange: (String) -> Unit){
-    val openDialog = remember {
-        mutableStateOf(true)
-    }
+fun CustomDialog(openDialog:MutableState<Boolean>) {
 
     if (openDialog.value) {
         AlertDialog(
@@ -24,17 +17,63 @@ fun CustomDialog(onTextChange: (String) -> Unit){
                 openDialog.value = false
             },
             title = {
-                Text(text = "Title")
+                Text(text = "Cual es las comida que desea agregar?")
             },
             text = {
-                Column {
-                    TextField(
-                        value = "",
-                        onValueChange = onTextChange,
+                var expanded = remember { mutableStateOf(false) }
+                var expandedCodes = remember { mutableStateOf(false) }
+                Column() {
+
+                    TextButton(
+                        onClick = {
+                            expanded.value = !expanded.value
+                            expandedCodes.value = false
+                        },
                         modifier = Modifier.fillMaxWidth(),
-                        label = {
-                            Text(text = "¿Cuaĺ es la comida que desea agregar")
-                        })
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color.LightGray,
+                        ),
+                    ) {
+                        Text(text = "Comidas")
+                    }
+                    DropdownMenu(
+                        expanded = expanded.value,
+                        onDismissRequest = { expanded.value = false },
+                    ) {
+                        DropdownMenuItem(onClick = { expanded.value = false }) {
+                            Text("Comida 1")
+                        }
+                        DropdownMenuItem(onClick = { expanded.value = false }) {
+                            Text("Comida 2")
+                        }
+                    }
+
+                    TextButton(
+                        onClick = {
+                            expanded.value = false
+                            expandedCodes.value = !expandedCodes.value
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color.LightGray,
+                        ),
+                    ) {
+                        Text(text = "Status")
+                    }
+                    DropdownMenu(
+                        expanded = expanded.value,
+                        onDismissRequest = { expanded.value = false },
+                    ) {
+                        DropdownMenuItem(onClick = { expanded.value = false }) {
+                            Text("CT (Comio Todo)")
+                        }
+                        DropdownMenuItem(onClick = { expanded.value = false }) {
+                            Text("NT (No Termino)")
+                        }
+                        DropdownMenuItem(onClick = { expanded.value = false }) {
+                            Text("NQN (No Quiso Nada)")
+                        }
+                    }
                 }
             },
             buttons = {
