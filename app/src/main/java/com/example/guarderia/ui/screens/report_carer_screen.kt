@@ -1,41 +1,33 @@
 package com.example.guarderia.ui.screens
 
-import android.app.DatePickerDialog
-import android.content.ClipData.Item
 import android.content.Context
-import android.widget.DatePicker
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Save
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
 import com.example.guarderia.ui.theme.GeneralColor
+import com.example.guarderia.ui.utils.CustomDialog
 import com.example.guarderia.ui.utils.RowAction
 import com.example.guarderia.ui.utils.SelectedDate
 import com.example.guarderia.ui.utils.Separator
-import java.util.Calendar
-import java.util.Date
 
-@Preview(showBackground = true)
 @Composable
-fun ReportCarerScreen() {
+fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel) {
 
     Scaffold(
         topBar = {
@@ -61,7 +53,9 @@ fun ReportCarerScreen() {
         floatingActionButton = {
             Button(
                 onClick = {},
-                modifier = Modifier.size(166.dp, 50.dp).clip(CircleShape),
+                modifier = Modifier
+                    .size(166.dp, 50.dp)
+                    .clip(CircleShape),
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = GeneralColor
                 )
@@ -74,30 +68,47 @@ fun ReportCarerScreen() {
         }
     ) {
 
-        Box(modifier = Modifier.fillMaxSize().padding(it)) {
+        Box(modifier = Modifier
+            .fillMaxSize()
+            .padding(it)) {
             val context = LocalContext.current
 
-            Body(context)
+            Body(context,reportCarerViewModel)
 
         }
     }
 }
 
 @Composable
-fun Body(context: Context) {
-    Column(modifier = Modifier.padding(20.dp).fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Eliu Eduardo Mendoza", fontSize = 24.sp)
+fun Body(context: Context, reportCarerViewModel: ReportCarerViewModel) {
+    val openDialog = remember {
+        mutableStateOf(true)
+    }
+
+    val name: String? by reportCarerViewModel.name.observeAsState()
+    val years:String? by reportCarerViewModel.yearsOld.observeAsState()
+    val fatherName:String? by reportCarerViewModel.fathersName.observeAsState()
+    val fatherPhone:String? by reportCarerViewModel.fathersPhone.observeAsState()
+
+
+    Column(modifier = Modifier
+        .padding(20.dp)
+        .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        CustomDialog(openDialog = openDialog)
+        Text(name!!, fontSize = 24.sp)
         Spacer(Modifier.size(10.dp))
-        Text("Edad: 5 años", fontSize = 20.sp)
+        Text("Edad: $years años", fontSize = 20.sp)
         Spacer(Modifier.size(10.dp))
-        Text("Tutor@: Ulises Velez Saldania ", fontSize = 20.sp)
+        Text(fatherName!!, fontSize = 20.sp)
         Spacer(Modifier.size(10.dp))
-        Text("Telefono: ", fontSize = 20.sp)
+        Text( fatherPhone!!, fontSize = 20.sp)
         Spacer(Modifier.size(10.dp))
         SelectedDate(context)
         Spacer(Modifier.size(15.dp))
         Separator("Reporte De Comida Ingerida")
-        FoodTable()
+        FoodTable(dialog ={
+            openDialog.value=true
+        })
         Separator("Reporte De Evacuaciones")
         EvacuationTable()
         Separator("Observaciones")
@@ -109,13 +120,14 @@ fun Body(context: Context) {
 
 
 @Composable
-fun FoodTable() {
+fun FoodTable(dialog: ()->Unit) {
     val listState = rememberLazyListState(0)
+
 
     LazyColumn(state = listState) {
 
         item {
-            RowAction("Comida", "Status", GeneralColor, action = {}) {
+            RowAction("Comida", "Status", GeneralColor, action =dialog) {
                 Icon(Icons.Filled.Add, contentDescription = "Add element ")
             }
         }
