@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.guarderia.domain.viewmodel.ChildrenViewModel
 import com.example.guarderia.domain.viewmodel.LoginViewModel
+import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
 import com.example.guarderia.ui.routes.Routes
 import com.example.guarderia.ui.screens.ChildrenScreen
 import com.example.guarderia.ui.screens.LoginScreen
@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
 
                         composable(Routes.ReportCarerScreen.route) {
 
-                            ReportCarerScreen()
+                            ReportCarerScreen(ReportCarerViewModel(id = "4",navigator))
                         }
                     }
 
