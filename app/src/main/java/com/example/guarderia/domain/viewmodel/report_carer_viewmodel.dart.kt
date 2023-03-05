@@ -1,27 +1,21 @@
 package com.example.guarderia.domain.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
+import com.example.guarderia.domain.entities.Child
+import com.example.guarderia.domain.entities.User
 
-class ReportCarerViewModel(private  val id:String,private val navigator:NavHostController):ViewModel(){
+class ReportCarerViewModel(private val navigator:NavHostController):ViewModel(){
 
-    private val _name= MutableLiveData<String>()
-    val name: LiveData<String>
-        get()=_name
+    var child  by mutableStateOf<Child?>(null)
+    var father by mutableStateOf<User?>(null)
 
-    val yearsOld=MutableLiveData<String>()
-    val fathersName= MutableLiveData<String>()
-    val fathersPhone= MutableLiveData<String>()
-
-
-     init {
-
-        _name.value="Eliu Eduardo Mendoza"
-        yearsOld.value=id
-        fathersName.value="Ulises Velez Saldania"
-        fathersPhone.value="555555555"
+    fun report(selectedChild: Child){
+        child = selectedChild;
+        father= tutorUsers[child!!.tutormail]
     }
 
 }

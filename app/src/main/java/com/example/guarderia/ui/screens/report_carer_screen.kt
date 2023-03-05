@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -19,15 +18,15 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
 import com.example.guarderia.ui.theme.GeneralColor
-import com.example.guarderia.ui.utils.CustomDialog
 import com.example.guarderia.ui.utils.RowAction
 import com.example.guarderia.ui.utils.SelectedDate
 import com.example.guarderia.ui.utils.Separator
 
 @Composable
-fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel) {
+fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel,navigator:NavHostController) {
 
     Scaffold(
         topBar = {
@@ -41,7 +40,7 @@ fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel) {
                 navigationIcon = {
 
                     IconButton(onClick = {
-//                        navigator.popBackStack()
+                        navigator.popBackStack()
                     }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "BackNavigation")
                     }
@@ -68,12 +67,14 @@ fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel) {
         }
     ) {
 
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .padding(it)) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it)
+        ) {
             val context = LocalContext.current
 
-            Body(context,reportCarerViewModel)
+            Body(context, reportCarerViewModel)
 
         }
     }
@@ -82,32 +83,32 @@ fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel) {
 @Composable
 fun Body(context: Context, reportCarerViewModel: ReportCarerViewModel) {
     val openDialog = remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
 
-    val name: String? by reportCarerViewModel.name.observeAsState()
-    val years:String? by reportCarerViewModel.yearsOld.observeAsState()
-    val fatherName:String? by reportCarerViewModel.fathersName.observeAsState()
-    val fatherPhone:String? by reportCarerViewModel.fathersPhone.observeAsState()
+    val selectedChild = reportCarerViewModel.child
+    val father= reportCarerViewModel.father
 
 
-    Column(modifier = Modifier
-        .padding(20.dp)
-        .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        CustomDialog(openDialog = openDialog)
-        Text(name!!, fontSize = 24.sp)
+    Column(
+        modifier = Modifier
+            .padding(20.dp)
+            .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+//        CustomDialog(openDialog = openDialog)
+        Text(selectedChild!!.name, fontSize = 24.sp)
         Spacer(Modifier.size(10.dp))
-        Text("Edad: $years años", fontSize = 20.sp)
+        Text("Edad: ${selectedChild.age} años", fontSize = 20.sp)
         Spacer(Modifier.size(10.dp))
-        Text(fatherName!!, fontSize = 20.sp)
+        Text(father!!.name, fontSize = 20.sp)
         Spacer(Modifier.size(10.dp))
-        Text( fatherPhone!!, fontSize = 20.sp)
+        Text(father.phone, fontSize = 20.sp)
         Spacer(Modifier.size(10.dp))
         SelectedDate(context)
         Spacer(Modifier.size(15.dp))
         Separator("Reporte De Comida Ingerida")
-        FoodTable(dialog ={
-            openDialog.value=true
+        FoodTable(dialog = {
+            openDialog.value = true
         })
         Separator("Reporte De Evacuaciones")
         EvacuationTable()
@@ -118,16 +119,15 @@ fun Body(context: Context, reportCarerViewModel: ReportCarerViewModel) {
 }
 
 
-
 @Composable
-fun FoodTable(dialog: ()->Unit) {
+fun FoodTable(dialog: () -> Unit) {
     val listState = rememberLazyListState(0)
 
 
     LazyColumn(state = listState) {
 
         item {
-            RowAction("Comida", "Status", GeneralColor, action =dialog) {
+            RowAction("Comida", "Status", GeneralColor, action = dialog) {
                 Icon(Icons.Filled.Add, contentDescription = "Add element ")
             }
         }
