@@ -4,34 +4,22 @@ import java.util.*
 import kotlin.collections.HashMap
 
 data class Child(
-        val name:String,
-        val tutormail:String,
-        var teachermail:String,
-        var age:Int,
-        var overallReport:HashMap<Date,Reporte>?=null,
+    val name: String,
+    val tutormail: String,
+    val teachermail: String,
+    val age: Int,
+    var overallReport: HashMap<Date, Report>,
 )
 
-class Evacuacion(var evacuacion: String, var hora: Date)
+class Evacuation(var evacution: String, var date: Date)
 
-class Comida(var food: String, var status: String)
-class Reporte {
-        private val mealRegistry: ArrayList<Comida>
-        private val evacRegistry: ArrayList<Evacuacion>
-        var campoObservaciones: String? = null
+class Food(var food: String, var status: String)
+class Report(
+    val foodRecord: ArrayList<Food>,
+    val evacuationRecord: ArrayList<Evacuation>,
+    var detailsRecord: String,
+)
 
-        init {
-                mealRegistry = ArrayList()
-                evacRegistry = ArrayList()
-        }
 
-        fun addMeal(food: String, status: String) {
-                val newMeal = Comida(food, status)
-                mealRegistry.add(newMeal)
-        }
 
-        fun addEvacuacion(evacuacion: String, hora: Date) {
-                val newEvac = Evacuacion(evacuacion, hora)
-                evacRegistry.add(newEvac)
-        }
-}
 
