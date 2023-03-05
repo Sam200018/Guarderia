@@ -1,4 +1,4 @@
 package com.example.guarderia.domain.entities
 
 
-data class User(val name:String, val type:String,val password:String)
+data class User(val name:String, val type:String,val password:String,val phone:String)
