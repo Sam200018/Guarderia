@@ -1,6 +1,7 @@
 package com.example.guarderia.ui.screens
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -9,24 +10,30 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.NoteAdd
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.guarderia.domain.entities.Food
 import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
 import com.example.guarderia.ui.theme.GeneralColor
+import com.example.guarderia.ui.utils.CustomDialog
 import com.example.guarderia.ui.utils.RowAction
 import com.example.guarderia.ui.utils.SelectedDate
 import com.example.guarderia.ui.utils.Separator
+import java.util.Date
 
 @Composable
-fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel,navigator:NavHostController) {
+fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel, navigator: NavHostController) {
 
     Scaffold(
         topBar = {
@@ -82,12 +89,16 @@ fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel,navigator:NavHo
 
 @Composable
 fun Body(context: Context, reportCarerViewModel: ReportCarerViewModel) {
-    val openDialog = remember {
-        mutableStateOf(false)
-    }
+    val scope= rememberCoroutineScope()
+    val openSaveDayReportDialog = remember { mutableStateOf(false) }
+    val openAddFoodReportDialog = remember { mutableStateOf(false) }
 
     val selectedChild = reportCarerViewModel.child
-    val father= reportCarerViewModel.father
+    val father = reportCarerViewModel.father
+    val isEnable: Boolean by reportCarerViewModel.isEditable.observeAsState(true)
+    val date: Date by reportCarerViewModel.date.observeAsState(Date())
+    val foodReport = reportCarerViewModel.foodReport
+
 
 
     Column(
@@ -95,7 +106,7 @@ fun Body(context: Context, reportCarerViewModel: ReportCarerViewModel) {
             .padding(20.dp)
             .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
-//        CustomDialog(openDialog = openDialog)
+        CustomDialog(openDialog = openAddFoodReportDialog,reportCarerViewModel)
         Text(selectedChild!!.name, fontSize = 24.sp)
         Spacer(Modifier.size(10.dp))
         Text("Edad: ${selectedChild.age} años", fontSize = 20.sp)
@@ -104,14 +115,14 @@ fun Body(context: Context, reportCarerViewModel: ReportCarerViewModel) {
         Spacer(Modifier.size(10.dp))
         Text(father.phone, fontSize = 20.sp)
         Spacer(Modifier.size(10.dp))
-        SelectedDate(context)
+        SelectedDate(context, reportCarerViewModel, date)
         Spacer(Modifier.size(15.dp))
         Separator("Reporte De Comida Ingerida")
-        FoodTable(dialog = {
-            openDialog.value = true
+        FoodTable(isEnable, foodReport, dialog = {
+            openAddFoodReportDialog.value = true
         })
         Separator("Reporte De Evacuaciones")
-        EvacuationTable()
+        EvacuationTable(isEnable)
         Separator("Observaciones")
         Spacer(Modifier.size(10.dp))
         Details()
@@ -120,27 +131,43 @@ fun Body(context: Context, reportCarerViewModel: ReportCarerViewModel) {
 
 
 @Composable
-fun FoodTable(dialog: () -> Unit) {
+fun FoodTable(isEnable: Boolean, foodReport: List<Food>, dialog: () -> Unit) {
     val listState = rememberLazyListState(0)
 
 
     LazyColumn(state = listState) {
-
         item {
-            RowAction("Comida", "Status", GeneralColor, action = dialog) {
+            RowAction("Comida", "Status", GeneralColor, isEnable, action = dialog) {
                 Icon(Icons.Filled.Add, contentDescription = "Add element ")
             }
         }
-
+        if (foodReport.isEmpty()) {
+            item {
+                Text(text = "No has agregado ningun registro", textAlign = TextAlign.Center)
+            }
+        } else {
+            items(foodReport.size) {
+                RowAction(
+                    food = foodReport[it].food,
+                    description = foodReport[it].status,
+                    color = Color.Gray,
+                    isEnable = isEnable,
+                    action = {
+                        Log.i("Item rowAction", "$it")
+                    }) {
+                    Icon(Icons.Filled.NoteAdd, "Edit food Report")
+                }
+            }
+        }
     }
 }
 
 @Composable
-fun EvacuationTable() {
+fun EvacuationTable(isEnable: Boolean) {
     val listState = rememberLazyListState(0)
     LazyColumn(state = listState) {
         item {
-            RowAction("Evacuación", "Hora", GeneralColor, action = {}) {
+            RowAction("Evacuación", "Hora", GeneralColor, isEnable, action = {}) {
                 Icon(Icons.Filled.Add, contentDescription = "Add element ")
             }
         }
