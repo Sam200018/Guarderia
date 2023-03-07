@@ -1,5 +1,6 @@
 package com.example.guarderia.ui.utils
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
 import android.widget.DatePicker
@@ -13,11 +14,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
 import com.example.guarderia.ui.theme.GeneralColor
+import java.text.SimpleDateFormat
 import java.util.*
 
+
 @Composable
-fun SelectedDate(context: Context) {
+fun SelectedDate(context: Context,reportCarerViewModel: ReportCarerViewModel,date: Date) {
     val currentDate = Calendar.getInstance()
     val mDay = currentDate.get(Calendar.DAY_OF_MONTH)
     val mMonth = currentDate.get(Calendar.MONTH)
@@ -25,8 +29,10 @@ fun SelectedDate(context: Context) {
 
     currentDate.time = Date()
 
-    val mDatePickerDialog = DatePickerDialog(context, { _: DatePicker, mYear: Int, mMonth: Int, mDayOfMonth: Int ->
-        println("$mDayOfMonth/${mMonth + 1}/$mYear")
+    val mDatePickerDialog = DatePickerDialog(context, fun(_: DatePicker, sYear: Int, sMonth: Int, sDayOfMonth: Int) {
+        val selectedDate=Calendar.getInstance()
+        selectedDate.set(sYear,sMonth,sDayOfMonth)
+        reportCarerViewModel.changeDate(selectedDate.time)
     }, mYear, mMonth, mDay)
 
     Button(
@@ -37,6 +43,8 @@ fun SelectedDate(context: Context) {
         )
 
     ) {
-        Text("03/Mar/2023", fontSize = 20.sp)
+        val formatter = SimpleDateFormat("dd/MM/yyyy",Locale.getDefault()).format(date)
+
+        Text(formatter, fontSize = 20.sp)
     }
 }
