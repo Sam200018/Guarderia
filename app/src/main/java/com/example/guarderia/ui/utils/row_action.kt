@@ -14,7 +14,14 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun RowAction(food: String, description: String, color:Color, action: () -> Unit, iconAction: @Composable () -> Unit) {
+fun RowAction(
+    food: String,
+    description: String,
+    color: Color,
+    isEnable: Boolean = false,
+    action: () -> Unit,
+    iconAction: @Composable () -> Unit
+) {
 
 
     Row(
@@ -24,10 +31,14 @@ fun RowAction(food: String, description: String, color:Color, action: () -> Unit
     ) {
         Text(food, fontSize = 20.sp)
         Text(description, fontSize = 20.sp)
-        TextButton(onClick = action, colors = ButtonDefaults.buttonColors(
-            backgroundColor = color
-        )) {
-            iconAction()
+        if(isEnable){
+            TextButton(
+                onClick = action, colors = ButtonDefaults.buttonColors(
+                    backgroundColor = color
+                )
+            ) {
+                iconAction()
+            }
         }
 
     }
