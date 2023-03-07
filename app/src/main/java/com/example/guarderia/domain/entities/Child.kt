@@ -11,14 +11,6 @@ data class Child(
     var overallReport: HashMap<Date, Report>,
 )
 
-class Evacuation(var evacution: String, var date: Date)
-
-class Food(var food: String, var status: String)
-class Report(
-    val foodRecord: ArrayList<Food>,
-    val evacuationRecord: ArrayList<Evacuation>,
-    var detailsRecord: String,
-)
 
 
 
