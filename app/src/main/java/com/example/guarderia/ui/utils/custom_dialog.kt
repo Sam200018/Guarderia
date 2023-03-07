@@ -2,26 +2,35 @@ package com.example.guarderia.ui.utils
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.guarderia.domain.entities.Food
+import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
+import com.example.guarderia.ui.theme.GeneralColor
 
 
 @Composable
-fun CustomDialog(openDialog:MutableState<Boolean>) {
+fun CustomDialog(openDialog: MutableState<Boolean>, reportCarerViewModel: ReportCarerViewModel) {
+    val selectedFood = remember { mutableStateOf("") }
+    val selectedCode = remember { mutableStateOf("") }
 
     if (openDialog.value) {
         AlertDialog(
             onDismissRequest = {
+                selectedFood.value=""
+                selectedCode.value=""
                 openDialog.value = false
             },
             title = {
                 Text(text = "Cual es las comida que desea agregar?")
             },
             text = {
-                var expanded = remember { mutableStateOf(false) }
-                var expandedCodes = remember { mutableStateOf(false) }
+                val expanded = remember { mutableStateOf(false) }
+                val expandedCodes = remember { mutableStateOf(false) }
                 Column() {
 
                     TextButton(
@@ -34,43 +43,66 @@ fun CustomDialog(openDialog:MutableState<Boolean>) {
                             backgroundColor = Color.LightGray,
                         ),
                     ) {
-                        Text(text = "Comidas")
+                        if (selectedFood.value == "") {
+                            TypeDropMenu(type = "Comidas")
+                        } else {
+                            Text(text = selectedFood.value)
+                        }
                     }
                     DropdownMenu(
                         expanded = expanded.value,
                         onDismissRequest = { expanded.value = false },
                     ) {
-                        DropdownMenuItem(onClick = { expanded.value = false }) {
+                        DropdownMenuItem(onClick = {
+                            selectedFood.value = "Comida 1"
+                            expanded.value = false
+                        }) {
                             Text("Comida 1")
                         }
-                        DropdownMenuItem(onClick = { expanded.value = false }) {
+                        DropdownMenuItem(onClick = {
+                            selectedFood.value = "Comida 2"
+                            expanded.value = false
+                        }) {
                             Text("Comida 2")
                         }
                     }
 
                     TextButton(
                         onClick = {
-                            expanded.value = false
                             expandedCodes.value = !expandedCodes.value
+                            expanded.value = false
                         },
                         modifier = Modifier.fillMaxWidth(),
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color.LightGray,
                         ),
                     ) {
-                        Text(text = "Status")
+                        if (selectedCode.value == "") {
+                            TypeDropMenu(type = "Status")
+                        } else {
+                            Text(text = selectedCode.value)
+                        }
                     }
                     DropdownMenu(
-                        expanded = expanded.value,
-                        onDismissRequest = { expanded.value = false },
+                        expanded = expandedCodes.value,
+                        onDismissRequest = { expandedCodes.value = false },
                     ) {
-                        DropdownMenuItem(onClick = { expanded.value = false }) {
+                        DropdownMenuItem(onClick = {
+                            selectedCode.value = "CT (Comio Todo)"
+                            expandedCodes.value = false
+                        }) {
                             Text("CT (Comio Todo)")
                         }
-                        DropdownMenuItem(onClick = { expanded.value = false }) {
+                        DropdownMenuItem(onClick = {
+                            selectedCode.value = "NT (No Termino)"
+                            expandedCodes.value = false
+                        }) {
                             Text("NT (No Termino)")
                         }
-                        DropdownMenuItem(onClick = { expanded.value = false }) {
+                        DropdownMenuItem(onClick = {
+                            selectedCode.value = "NQN (No Quiso Nada)"
+                            expandedCodes.value = false
+                        }) {
                             Text("NQN (No Quiso Nada)")
                         }
                     }
@@ -78,12 +110,27 @@ fun CustomDialog(openDialog:MutableState<Boolean>) {
             },
             buttons = {
                 Row(
-                    modifier = Modifier.padding(all = 8.dp),
-                    horizontalArrangement = Arrangement.Center
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
+                    Button(colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color.Red
+                    ), onClick = { openDialog.value = false }) {
+                        Text(text = "Cancelar")
+                    }
                     Button(
-                        modifier = Modifier.fillMaxWidth(),
-                        onClick = { openDialog.value = false }
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = GeneralColor
+                        ),
+                        enabled = (selectedCode.value != "" && selectedFood.value != ""),
+                        onClick = {
+                            val newFood = Food(selectedFood.value, selectedCode.value)
+                            reportCarerViewModel.addFoodReport(newFood)
+
+                            selectedCode.value=""
+                            selectedFood.value=""
+                            openDialog.value = false
+                        }
                     ) {
                         Text("Aceptar")
                     }
@@ -91,5 +138,13 @@ fun CustomDialog(openDialog:MutableState<Boolean>) {
             }
         )
     }
+}
 
+
+@Composable
+fun TypeDropMenu(type: String) {
+    Row {
+        Text(text = type)
+        Icon(Icons.Filled.ArrowDropDown, "Drop menu about $type")
+    }
 }
