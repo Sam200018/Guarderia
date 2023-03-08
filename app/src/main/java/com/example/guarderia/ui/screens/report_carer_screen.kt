@@ -23,14 +23,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.guarderia.domain.entities.Evacuation
 import com.example.guarderia.domain.entities.Food
 import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
 import com.example.guarderia.ui.theme.GeneralColor
-import com.example.guarderia.ui.utils.CustomDialog
-import com.example.guarderia.ui.utils.RowAction
-import com.example.guarderia.ui.utils.SelectedDate
-import com.example.guarderia.ui.utils.Separator
-import java.util.Date
+import com.example.guarderia.ui.utils.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 @Composable
 fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel, navigator: NavHostController) {
@@ -89,15 +88,17 @@ fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel, navigator: Nav
 
 @Composable
 fun Body(context: Context, reportCarerViewModel: ReportCarerViewModel) {
-    val scope= rememberCoroutineScope()
+    val scope = rememberCoroutineScope()
     val openSaveDayReportDialog = remember { mutableStateOf(false) }
     val openAddFoodReportDialog = remember { mutableStateOf(false) }
+    val openAddEvacuationReportDialog = remember { mutableStateOf(false) }
 
     val selectedChild = reportCarerViewModel.child
     val father = reportCarerViewModel.father
     val isEnable: Boolean by reportCarerViewModel.isEditable.observeAsState(true)
     val date: Date by reportCarerViewModel.date.observeAsState(Date())
     val foodReport = reportCarerViewModel.foodReport
+    val evacuationReport = reportCarerViewModel.evacuationReport
 
 
 
@@ -106,7 +107,8 @@ fun Body(context: Context, reportCarerViewModel: ReportCarerViewModel) {
             .padding(20.dp)
             .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        CustomDialog(openDialog = openAddFoodReportDialog,reportCarerViewModel)
+        CustomDialog(openDialog = openAddFoodReportDialog, reportCarerViewModel)
+        EvacuationDialog(openEvacuationDialog = openAddEvacuationReportDialog,reportCarerViewModel)
         Text(selectedChild!!.name, fontSize = 24.sp)
         Spacer(Modifier.size(10.dp))
         Text("Edad: ${selectedChild.age} años", fontSize = 20.sp)
@@ -122,7 +124,9 @@ fun Body(context: Context, reportCarerViewModel: ReportCarerViewModel) {
             openAddFoodReportDialog.value = true
         })
         Separator("Reporte De Evacuaciones")
-        EvacuationTable(isEnable)
+        EvacuationTable(isEnable, evacuationReport) {
+            openAddEvacuationReportDialog.value = true
+        }
         Separator("Observaciones")
         Spacer(Modifier.size(10.dp))
         Details()
@@ -143,7 +147,11 @@ fun FoodTable(isEnable: Boolean, foodReport: List<Food>, dialog: () -> Unit) {
         }
         if (foodReport.isEmpty()) {
             item {
-                Text(text = "No has agregado ningun registro", textAlign = TextAlign.Center)
+                Text(
+                    text = "No has agregado ningun registro",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         } else {
             items(foodReport.size) {
@@ -155,7 +163,7 @@ fun FoodTable(isEnable: Boolean, foodReport: List<Food>, dialog: () -> Unit) {
                     action = {
                         Log.i("Item rowAction", "$it")
                     }) {
-                    Icon(Icons.Filled.NoteAdd, "Edit food Report")
+                    Icon(Icons.Filled.NoteAdd, "Edit food report")
                 }
             }
         }
@@ -163,12 +171,37 @@ fun FoodTable(isEnable: Boolean, foodReport: List<Food>, dialog: () -> Unit) {
 }
 
 @Composable
-fun EvacuationTable(isEnable: Boolean) {
+fun EvacuationTable(isEnable: Boolean, evacuationReport: List<Evacuation>, dialog: () -> Unit) {
     val listState = rememberLazyListState(0)
     LazyColumn(state = listState) {
         item {
-            RowAction("Evacuación", "Hora", GeneralColor, isEnable, action = {}) {
+            RowAction("Evacuación", "Hora", GeneralColor, isEnable, action = dialog) {
                 Icon(Icons.Filled.Add, contentDescription = "Add element ")
+            }
+        }
+        if (evacuationReport.isEmpty()) {
+            item {
+                Text(
+                    text = "No has agregado ningun registro",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        } else {
+            items(evacuationReport.size) {
+                val hr = SimpleDateFormat("hh:mm a",Locale.getDefault()).format(evacuationReport[it].date)
+
+
+                RowAction(
+                    food = evacuationReport[it].evacution,
+                    description = hr,
+                    color = Color.Gray,
+                    isEnable = isEnable,
+                    action = {
+                        Log.i("Evac item rowAction", "$it")
+                    }) {
+                    Icon(Icons.Filled.NoteAdd, "Edit evacuation report")
+                }
             }
         }
 
