@@ -23,11 +23,12 @@ import java.util.*
 @Composable
 fun SelectedDate(context: Context,reportCarerViewModel: ReportCarerViewModel,date: Date) {
     val currentDate = Calendar.getInstance()
+    currentDate.time = date
+
     val mDay = currentDate.get(Calendar.DAY_OF_MONTH)
     val mMonth = currentDate.get(Calendar.MONTH)
     val mYear = currentDate.get(Calendar.YEAR)
 
-    currentDate.time = Date()
 
     val mDatePickerDialog = DatePickerDialog(context, fun(_: DatePicker, sYear: Int, sMonth: Int, sDayOfMonth: Int) {
         val selectedDate=Calendar.getInstance()
