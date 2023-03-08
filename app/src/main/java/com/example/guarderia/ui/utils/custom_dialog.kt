@@ -21,8 +21,8 @@ fun CustomDialog(openDialog: MutableState<Boolean>, reportCarerViewModel: Report
     if (openDialog.value) {
         AlertDialog(
             onDismissRequest = {
-                selectedFood.value=""
-                selectedCode.value=""
+                selectedFood.value = ""
+                selectedCode.value = ""
                 openDialog.value = false
             },
             title = {
@@ -127,8 +127,8 @@ fun CustomDialog(openDialog: MutableState<Boolean>, reportCarerViewModel: Report
                             val newFood = Food(selectedFood.value, selectedCode.value)
                             reportCarerViewModel.addFoodReport(newFood)
 
-                            selectedCode.value=""
-                            selectedFood.value=""
+                            selectedCode.value = ""
+                            selectedFood.value = ""
                             openDialog.value = false
                         }
                     ) {
