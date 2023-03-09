@@ -51,7 +51,7 @@ fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel, navigator: Nav
                 navigationIcon = {
 
                     IconButton(onClick = {
-                        navigator.popBackStack()
+                        reportCarerViewModel.back()
                     }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "BackNavigation")
                     }

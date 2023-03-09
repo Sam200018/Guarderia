@@ -63,4 +63,12 @@ class ReportCarerViewModel(private val navigator: NavHostController) : ViewModel
     fun saveDayReport() {
         _isEditable.value = false
     }
+
+    fun back(){
+        navigator.popBackStack()
+        _foodReport.clear()
+        _evacuationReport.clear()
+        _details.value=""
+        _isEditable.value=true
+    }
 }
