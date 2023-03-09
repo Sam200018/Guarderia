@@ -31,6 +31,9 @@ class ReportCarerViewModel(private val navigator: NavHostController) : ViewModel
     private val _evacuationReport = mutableStateListOf<Evacuation>()
     val evacuationReport: List<Evacuation> = _evacuationReport
 
+    private val _details = MutableLiveData("")
+    val details: LiveData<String> = _details
+
     fun report(selectedChild: Child) {
         child = selectedChild;
         father = users[child!!.tutormail]
@@ -38,6 +41,11 @@ class ReportCarerViewModel(private val navigator: NavHostController) : ViewModel
 
     fun changeDate(selectedDate: Date) {
         _date.value = selectedDate
+        _foodReport.clear()
+        _evacuationReport.clear()
+        _details.value = ""
+        _isEditable.value=true
+//        TODO: buscar todo
     }
 
     fun addFoodReport(food: Food) {
@@ -46,5 +54,13 @@ class ReportCarerViewModel(private val navigator: NavHostController) : ViewModel
 
     fun addFoodEvacuationReport(evacuation: Evacuation) {
         _evacuationReport.add(evacuation)
+    }
+
+    fun onDetailsChange(details: String) {
+        _details.value = details
+    }
+
+    fun saveDayReport() {
+        _isEditable.value = false
     }
 }
