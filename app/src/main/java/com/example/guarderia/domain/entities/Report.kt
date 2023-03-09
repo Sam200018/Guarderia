@@ -8,7 +8,7 @@ data class Report(
     val evacuationRecord: ArrayList<Evacuation>,
     var detailsRecord: String,
 )
-data class Evacuation(var evacution: String, var date: Date)
+data class Evacuation(var evacuation: String, var date: Date)
 
 data class Food(var food: String, var status: String)
 
