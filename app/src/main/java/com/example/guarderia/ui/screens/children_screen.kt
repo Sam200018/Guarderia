@@ -43,27 +43,114 @@ fun Body(
     reportCarerViewModel: ReportCarerViewModel,
     reportParentViewModel: ReportParentViewModel
 ) {
-    val child = registeredChildren[4]
-    LazyColumn {
-        item {
-            ChildCard(child = child!!) {
-                if (type == "tutor@") {
-                    reportParentViewModel.viewReport(child)
-                    childrenViewModel.viewReport()
-                } else {
-                    reportCarerViewModel.report(child)
-                    childrenViewModel.report()
+    if (userEmail=="brendamateos.prim@gmail.com"){
 
+    LazyColumn {
+
+        item {
+            var child = registeredChildren[1]
+            ChildCard(child = child!!) {
+                    reportCarerViewModel.report(child!!)
+                    childrenViewModel.report()
+            }
+        }
+
+        item{
+            var child= registeredChildren[2]
+            ChildCard(child = child!!) {
+                    reportCarerViewModel.report(child!!)
+                    childrenViewModel.report()
+            }
+        }
+
+        item{
+            var child= registeredChildren[6]
+            ChildCard(child = child!!) {
+                    reportCarerViewModel.report(child!!)
+                    childrenViewModel.report()
+            }
+        }
+
+        item{
+            var child= registeredChildren[8]
+            ChildCard(child = child!!) {
+                    reportCarerViewModel.report(child!!)
+                    childrenViewModel.report()
+            }
+        }
+
+        item{
+            var child= registeredChildren[9]
+            ChildCard(child = child!!) {
+                    reportCarerViewModel.report(child!!)
+                    childrenViewModel.report()
+            }
+        }
+
+        item{
+            var child= registeredChildren[11]
+            ChildCard(child = child!!) {
+                    reportCarerViewModel.report(child!!)
+                    childrenViewModel.report()
+            }
+        }
+        }
+    }
+
+    if (userEmail=="pruebaprofe@mail.com"){
+
+        LazyColumn {
+
+            item {
+                var child = registeredChildren[3]
+                ChildCard(child = child!!) {
+                    reportCarerViewModel.report(child!!)
+                    childrenViewModel.report()
+                }
+            }
+
+            item{
+                var child= registeredChildren[4]
+                ChildCard(child = child!!) {
+                    reportCarerViewModel.report(child!!)
+                    childrenViewModel.report()
+                }
+            }
+
+            item{
+                var child= registeredChildren[5]
+                ChildCard(child = child!!) {
+                    reportCarerViewModel.report(child!!)
+                    childrenViewModel.report()
+                }
+            }
+
+            item{
+                var child= registeredChildren[7]
+                ChildCard(child = child!!) {
+                    reportCarerViewModel.report(child!!)
+                    childrenViewModel.report()
+                }
+            }
+
+            item{
+                var child= registeredChildren[10]
+                ChildCard(child = child!!) {
+                    reportCarerViewModel.report(child!!)
+                    childrenViewModel.report()
                 }
             }
         }
     }
-}
-
-fun displayList(type: String) {
 
 }
 
+
+
+
+
+
+/*
 @Composable
 fun ExitButton(exitClick: () -> Unit) {
     Row() {
@@ -72,7 +159,7 @@ fun ExitButton(exitClick: () -> Unit) {
         }
 
     }
-}
+}*/
 
 
 /*

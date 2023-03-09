@@ -5,4 +5,5 @@ sealed class Routes(val route: String) {
     object ChildrenScreen : Routes("children")
     object ReportCarerScreen : Routes("reportCarer")
     object ReportParentScreen : Routes("reportParent")
+    object GroupSelectionScreen : Routes("groupSelection")
 }
