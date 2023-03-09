@@ -58,11 +58,12 @@ fun EvacuationDialog(openEvacuationDialog: MutableState<Boolean>, reportCarerVie
                         Text(text = "Cancelar")
                     }
 
-                    Button(colors = ButtonDefaults.buttonColors(
+                    Button(enabled = typeSelected.value.isNotEmpty(), colors = ButtonDefaults.buttonColors(
                         backgroundColor = GeneralColor
                     ), onClick = {
-                        val newEvacuation = Evacuation("", Date())
+                        val newEvacuation = Evacuation(typeSelected.value, Date())
                         reportCarerViewModel.addFoodEvacuationReport(newEvacuation)
+                        typeSelected.value = ""
                         openEvacuationDialog.value = false
                     }) {
                         Text(text = "Aceptar")
