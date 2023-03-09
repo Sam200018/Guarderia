@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
 
                     val navigator = rememberNavController()
                     val reportCarerViewModel= ReportCarerViewModel(navigator)
-                    val reportParentViewModel = ReportParentViewModel(navigator)
+                    val reportParentViewModel = ReportParentViewModel()
 
                     NavHost(navController = navigator, startDestination = Routes.LoginScreen.route) {
 
