@@ -144,7 +144,9 @@ fun Body(
         Spacer(Modifier.size(10.dp))
         Text(father.phone, fontSize = 20.sp)
         Spacer(Modifier.size(10.dp))
-        SelectedDate(context, reportCarerViewModel, date)
+        SelectedDate(context, date){
+            reportCarerViewModel.changeDate(it)
+        }
         Spacer(Modifier.size(15.dp))
         Separator("Reporte De Comida Ingerida")
         FoodTable(isEnable, foodReport, dialog = {
