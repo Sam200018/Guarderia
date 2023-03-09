@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.guarderia.domain.viewmodel.ChildrenViewModel
 import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
+import com.example.guarderia.domain.viewmodel.ReportParentViewModel
 import com.example.guarderia.domain.viewmodel.registeredChildren
 import com.example.guarderia.ui.utils.ChildCard
 
@@ -18,6 +19,7 @@ import com.example.guarderia.ui.utils.ChildCard
 fun ChildrenScreen(
     childrenViewModel: ChildrenViewModel,
     reportCarerViewModel: ReportCarerViewModel,
+    reportParentViewModel: ReportParentViewModel,
     userEmail: String,
     type: String
 ) {
@@ -27,7 +29,7 @@ fun ChildrenScreen(
             .padding(20.dp)
     ) {
 
-        Body(modifier = Modifier.align(Alignment.TopStart), childrenViewModel, userEmail, type, reportCarerViewModel)
+        Body(modifier = Modifier.align(Alignment.TopStart), childrenViewModel, userEmail, type, reportCarerViewModel, reportParentViewModel)
         //("Selection screen $userEmail, $type")
     }
 }
@@ -38,14 +40,16 @@ fun Body(
     childrenViewModel: ChildrenViewModel,
     userEmail: String,
     type: String,
-    reportCarerViewModel: ReportCarerViewModel
+    reportCarerViewModel: ReportCarerViewModel,
+    reportParentViewModel: ReportParentViewModel
 ) {
     val child = registeredChildren[4]
     LazyColumn {
         item {
             ChildCard(child = child!!) {
                 if (type == "tutor@") {
-//                  TODO: crear el metodo view en su respectivo viewModel y en childViewModel para ir a esa pantalla
+                    reportParentViewModel.viewReport(child)
+                    childrenViewModel.viewReport()
                 } else {
                     reportCarerViewModel.report(child)
                     childrenViewModel.report()
@@ -54,19 +58,6 @@ fun Body(
             }
         }
     }
-//    Row() {
-//        ExitButton(
-//            exitClick = { childrenViewModel.exit() },
-//        )
-//        Spacer(modifier = Modifier.size(20.dp))
-//        if (type.equals("teacher")) {
-//            Text(text = "Bienvenido, Profesor(a)", fontSize = 20.sp)
-//            displayList(type)
-//        } else if (type.equals("tutor@")) {
-//            Text(text = "Bienvenido, tutor", fontSize = 20.sp)
-//        }
-//
-//    }
 }
 
 fun displayList(type: String) {

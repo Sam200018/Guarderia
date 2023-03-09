@@ -22,4 +22,7 @@ class ChildrenViewModel(private val navigator: NavHostController) : ViewModel(){
     fun report(){
         navigator.navigate(Routes.ReportCarerScreen.route)
     }
+    fun viewReport(){
+        navigator.navigate(Routes.ReportParentScreen.route)
+    }
 }
