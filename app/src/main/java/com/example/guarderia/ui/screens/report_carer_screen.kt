@@ -3,9 +3,9 @@ package com.example.guarderia.ui.screens
 import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -34,6 +34,11 @@ import java.util.*
 @Composable
 fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel, navigator: NavHostController) {
 
+    val foodReport = reportCarerViewModel.foodReport
+    val evacuationReport = reportCarerViewModel.evacuationReport
+    val details: String by reportCarerViewModel.details.observeAsState("")
+    val openSaveDayReportDialog = remember { mutableStateOf(false) }
+    val isEnable: Boolean by reportCarerViewModel.isEditable.observeAsState(true)
     Scaffold(
         topBar = {
             TopAppBar(
@@ -56,19 +61,25 @@ fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel, navigator: Nav
         },
         floatingActionButtonPosition = FabPosition.Center,
         floatingActionButton = {
-            Button(
-                onClick = {},
-                modifier = Modifier
-                    .size(166.dp, 50.dp)
-                    .clip(CircleShape),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = GeneralColor
-                )
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Guardar", fontSize = 16.sp)
-                    Icon(Icons.Filled.Save, contentDescription = "Save button")
+            if (isEnable) {
+                Button(
+                    onClick = {
+                        openSaveDayReportDialog.value = true
+                    },
+                    enabled = (evacuationReport.isNotEmpty() && foodReport.isNotEmpty() && details.isNotEmpty()),
+                    modifier = Modifier
+                        .size(166.dp, 50.dp)
+                        .clip(CircleShape),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = GeneralColor
+                    )
+                ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("Guardar", fontSize = 16.sp)
+                        Icon(Icons.Filled.Save, contentDescription = "Save button")
+                    }
                 }
+
             }
         }
     ) {
@@ -80,35 +91,51 @@ fun ReportCarerScreen(reportCarerViewModel: ReportCarerViewModel, navigator: Nav
         ) {
             val context = LocalContext.current
 
-            Body(context, reportCarerViewModel)
+            Body(
+                context,
+                isEnable,
+                openSaveDayReportDialog,
+                reportCarerViewModel,
+                foodReport,
+                evacuationReport,
+                details
+            )
 
         }
     }
 }
 
 @Composable
-fun Body(context: Context, reportCarerViewModel: ReportCarerViewModel) {
-    val scope = rememberCoroutineScope()
-    val openSaveDayReportDialog = remember { mutableStateOf(false) }
-    val openAddFoodReportDialog = remember { mutableStateOf(false) }
+fun Body(
+    context: Context,
+    isEnable: Boolean,
+    openSaveDayReportDialog: MutableState<Boolean>,
+    reportCarerViewModel: ReportCarerViewModel,
+    foodReport: List<Food>,
+    evacuationReport: List<Evacuation>,
+    details: String
+) {
+//    val scope = rememberCoroutineScope()
     val openAddEvacuationReportDialog = remember { mutableStateOf(false) }
+    val openAddFoodReportDialog = remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
 
     val selectedChild = reportCarerViewModel.child
     val father = reportCarerViewModel.father
-    val isEnable: Boolean by reportCarerViewModel.isEditable.observeAsState(true)
     val date: Date by reportCarerViewModel.date.observeAsState(Date())
-    val foodReport = reportCarerViewModel.foodReport
-    val evacuationReport = reportCarerViewModel.evacuationReport
 
 
 
     Column(
         modifier = Modifier
             .padding(20.dp)
-            .fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize()
+            .verticalScroll(scrollState), horizontalAlignment = Alignment.CenterHorizontally
+
     ) {
         CustomDialog(openDialog = openAddFoodReportDialog, reportCarerViewModel)
-        EvacuationDialog(openEvacuationDialog = openAddEvacuationReportDialog,reportCarerViewModel)
+        EvacuationDialog(openEvacuationDialog = openAddEvacuationReportDialog, reportCarerViewModel)
+        OnSaveDialog(openSaveDayReportDialog, reportCarerViewModel)
         Text(selectedChild!!.name, fontSize = 24.sp)
         Spacer(Modifier.size(10.dp))
         Text("Edad: ${selectedChild.age} años", fontSize = 20.sp)
@@ -129,39 +156,35 @@ fun Body(context: Context, reportCarerViewModel: ReportCarerViewModel) {
         }
         Separator("Observaciones")
         Spacer(Modifier.size(10.dp))
-        Details()
+        Details(details,isEnable) {
+            reportCarerViewModel.onDetailsChange(it)
+        }
     }
 }
 
 
 @Composable
 fun FoodTable(isEnable: Boolean, foodReport: List<Food>, dialog: () -> Unit) {
-    val listState = rememberLazyListState(0)
-
-
-    LazyColumn(state = listState) {
-        item {
-            RowAction("Comida", "Status", GeneralColor, isEnable, action = dialog) {
-                Icon(Icons.Filled.Add, contentDescription = "Add element ")
-            }
+    Column {
+        RowAction("Comida", "Status", GeneralColor, isEnable, action = dialog) {
+            Icon(Icons.Filled.Add, contentDescription = "Add element ")
         }
         if (foodReport.isEmpty()) {
-            item {
-                Text(
-                    text = "No has agregado ningun registro",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+            Text(
+                text = "No has agregado ningun registro",
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+
         } else {
-            items(foodReport.size) {
+            foodReport.forEachIndexed { index: Int, food: Food ->
                 RowAction(
-                    food = foodReport[it].food,
-                    description = foodReport[it].status,
+                    food = food.food,
+                    description = food.status,
                     color = Color.Gray,
                     isEnable = isEnable,
                     action = {
-                        Log.i("Item rowAction", "$it")
+                        Log.i("Item rowAction", "$index")
                     }) {
                     Icon(Icons.Filled.NoteAdd, "Edit food report")
                 }
@@ -172,45 +195,46 @@ fun FoodTable(isEnable: Boolean, foodReport: List<Food>, dialog: () -> Unit) {
 
 @Composable
 fun EvacuationTable(isEnable: Boolean, evacuationReport: List<Evacuation>, dialog: () -> Unit) {
-    val listState = rememberLazyListState(0)
-    LazyColumn(state = listState) {
-        item {
-            RowAction("Evacuación", "Hora", GeneralColor, isEnable, action = dialog) {
-                Icon(Icons.Filled.Add, contentDescription = "Add element ")
-            }
+
+    Column {
+        RowAction("Evacuación", "Hora", GeneralColor, isEnable, action = dialog) {
+            Icon(Icons.Filled.Add, contentDescription = "Add element ")
         }
         if (evacuationReport.isEmpty()) {
-            item {
-                Text(
-                    text = "No has agregado ningun registro",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
+
+            Text(
+                text = "No has agregado ningun registro",
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+
         } else {
-            items(evacuationReport.size) {
-                val hr = SimpleDateFormat("hh:mm a",Locale.getDefault()).format(evacuationReport[it].date)
 
-
+            evacuationReport.forEachIndexed { index: Int, evacuation: Evacuation ->
+                val hr = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(evacuation.date)
                 RowAction(
-                    food = evacuationReport[it].evacution,
+                    food = evacuation.evacuation,
                     description = hr,
                     color = Color.Gray,
                     isEnable = isEnable,
                     action = {
-                        Log.i("Evac item rowAction", "$it")
+                        Log.i("Evac item rowAction", "$index")
                     }) {
                     Icon(Icons.Filled.NoteAdd, "Edit evacuation report")
                 }
             }
         }
-
     }
 }
 
 @Composable
-fun Details() {
-    TextField(modifier = Modifier.defaultMinSize(361.dp, 239.dp), value = "", onValueChange = {}, label = {
-        Text("Obeservaciones")
-    })
+fun Details(details: String, isEnable: Boolean,onTextChange: (String) -> Unit) {
+    TextField(
+        readOnly = !isEnable,
+        modifier = Modifier.defaultMinSize(361.dp, 239.dp),
+        value = details,
+        onValueChange = onTextChange,
+        label = {
+            Text("Obeservaciones")
+        })
 }
