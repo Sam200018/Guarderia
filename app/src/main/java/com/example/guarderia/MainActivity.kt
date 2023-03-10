@@ -35,7 +35,7 @@ class MainActivity : ComponentActivity() {
 
                     val navigator = rememberNavController()
                     val reportCarerViewModel= ReportCarerViewModel(navigator)
-                    val reportParentViewModel = ReportParentViewModel()
+                    val reportParentViewModel = ReportParentViewModel(navigator)
 
                     NavHost(navController = navigator, startDestination = Routes.LoginScreen.route) {
 
@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(Routes.ReportParentScreen.route){
-                            ReportParentScreen(reportParentViewModel, navigator)
+                            ReportParentScreen(reportParentViewModel)
                         }
 
                     }
