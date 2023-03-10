@@ -14,7 +14,7 @@ import com.example.guarderia.domain.entities.Food
 import com.example.guarderia.domain.entities.User
 import java.util.*
 
-class ReportParentViewModel() : ViewModel() {
+class ReportParentViewModel(private val navigator: NavHostController) : ViewModel() {
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
@@ -30,18 +30,33 @@ class ReportParentViewModel() : ViewModel() {
     private val _evacuationRecord = mutableStateListOf<Evacuation>()
     val evacuationRecord: List<Evacuation> = _evacuationRecord
 
-    private val _detailsRecord = String()
-    val detailsRecord: String = _detailsRecord
+    val detailsRecord = mutableStateOf<String>("")
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
     fun viewReport(selectedChild: Child){
         child = selectedChild
         tutor = users[child!!.teachermail]
+        val reportDay=child!!.overallReport[Date()]
+        if(reportDay!=null){
+            _foodRecord.addAll(reportDay.foodRecord)
+            _evacuationRecord.addAll(reportDay.evacuationRecord)
+            detailsRecord.value = reportDay.detailsRecord
+        }
     }
 
-    fun changeDate(selectedDate: Date){
+    fun back(){
+        navigator.popBackStack()
+        _foodRecord.clear()
+        _evacuationRecord.clear()
+        detailsRecord.value = ""
+    }
+
+    fun changeDate(selectedDate: Date) {
         _date.value = selectedDate
+        _foodRecord.clear()
+        _evacuationRecord.clear()
+        detailsRecord.value = ""
     }
 
 }
