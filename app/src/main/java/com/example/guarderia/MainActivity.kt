@@ -11,11 +11,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.guarderia.domain.viewmodel.ChildrenViewModel
+import com.example.guarderia.domain.viewmodel.GroupSelectionViewModel
 import com.example.guarderia.domain.viewmodel.LoginViewModel
 import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
 import com.example.guarderia.domain.viewmodel.ReportParentViewModel
 import com.example.guarderia.ui.routes.Routes
 import com.example.guarderia.ui.screens.ChildrenScreen
+import com.example.guarderia.ui.screens.GroupSelectionScreen
 import com.example.guarderia.ui.screens.LoginScreen
 import com.example.guarderia.ui.screens.ReportCarerScreen
 import com.example.guarderia.ui.screens.ReportParentScreen
@@ -47,6 +49,16 @@ class MainActivity : ComponentActivity() {
 
                             if (userEmail != null && type != null) {
                                 ChildrenScreen(ChildrenViewModel(navigator),reportCarerViewModel, reportParentViewModel, userEmail, type)
+                            }
+                        }
+
+                        composable("${Routes.GroupSelectionScreen.route}/{userEmail}/{type}"){
+                            val userEmail = it.arguments?.getString("userEmail")
+                            val type = it.arguments?.getString("type")
+                            if (userEmail != null) {
+                                if (type != null) {
+                                    GroupSelectionScreen(GroupSelectionViewModel(navigator), reportCarerViewModel, userEmail, type)
+                                }
                             }
                         }
 

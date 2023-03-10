@@ -10,11 +10,12 @@ import com.example.guarderia.ui.routes.Routes
 
 
 val users: HashMap<String, User> = hashMapOf(
-    "samuelbaubas@gmail.com" to User("Samuel", "tutor@", "sabb2006","5555555555"),
-    "hpelayoc@gmail.com" to User("Carlos", "tutor@", "cahp2707","5555555555"),
-    "brendamateos.prim@gmail.com" to User("Brenda", "teacher", "sabb2006","5555555555"),
-    "pruebatutor@mail.com" to User("Pablo","tutor@","cont1234","5555555555"),
-    "pruebaprofe@mail.com" to User("Emanuel","teacher","cont1234","5555555555"),
+    "samuelbaubas@gmail.com" to User("Samuel", "tutor@", "sabb2006", "5555555555"),
+    "hpelayoc@gmail.com" to User("Carlos", "tutor@", "cahp2707", "5555555555"),
+    "pruebatutor@mail.com" to User("Pablo", "tutor@", "cont1234", "5555555555"),
+    "brendamateos.prim@gmail.com" to User("Brenda", "teacher", "sabb2006", "5555555555"),
+    //"teacher1@mail.com" to User("Sofia", "teacher", "cont1234", "5555555555"),
+    "pruebaprofe@mail.com" to User("Emanuel", "teacher", "cont1234", "5555555555")
 )
 
 
@@ -64,10 +65,20 @@ class LoginViewModel(private val navigator: NavHostController) : ViewModel() {
         if (userKey != null) {
             if (userKey.password == _password.value) {
 
-                navigator.navigate("${Routes.ChildrenScreen.route}/${_email.value}/${userKey.type}") {
+                if(userKey.type=="tutor@") {
 
-                    popUpTo(Routes.LoginScreen.route) {
-                        inclusive = true
+                    navigator.navigate("${Routes.ChildrenScreen.route}/${_email.value}/${userKey.type}") {
+
+                        popUpTo(Routes.LoginScreen.route) {
+                            inclusive = true
+                        }
+                    }
+                }
+                else{
+                    navigator.navigate("${Routes.GroupSelectionScreen.route}/${_email.value}/${userKey.type}"){
+                        popUpTo(Routes.LoginScreen.route) {
+                            inclusive = true
+                        }
                     }
                 }
             } else {
