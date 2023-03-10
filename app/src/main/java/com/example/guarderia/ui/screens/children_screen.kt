@@ -143,6 +143,111 @@ fun Body(
         }
     }
 
+    if (userEmail=="samuelbaubas@gmail.com"){
+
+        LazyColumn {
+
+            item {
+                var child = registeredChildren[1]
+                ChildCard(child = child!!) {
+                    reportParentViewModel.viewReport(child!!)
+                    childrenViewModel.viewReport()
+                }
+            }
+
+            item{
+                var child= registeredChildren[3]
+                ChildCard(child = child!!) {
+                    reportParentViewModel.viewReport(child!!)
+                    childrenViewModel.viewReport()
+                }
+            }
+
+            item{
+                var child= registeredChildren[8]
+                ChildCard(child = child!!) {
+                    reportParentViewModel.viewReport(child!!)
+                    childrenViewModel.viewReport()
+                }
+            }
+
+            item{
+                var child= registeredChildren[9]
+                ChildCard(child = child!!) {
+                    reportParentViewModel.viewReport(child!!)
+                    childrenViewModel.viewReport()
+                }
+            }
+        }
+    }
+
+    if (userEmail=="hpelayoc@gmail.com"){
+
+        LazyColumn {
+
+            item {
+                var child = registeredChildren[2]
+                ChildCard(child = child!!) {
+                    reportParentViewModel.viewReport(child!!)
+                    childrenViewModel.viewReport()
+                }
+            }
+
+            item{
+                var child= registeredChildren[4]
+                ChildCard(child = child!!) {
+                    reportParentViewModel.viewReport(child!!)
+                    childrenViewModel.viewReport()
+                }
+            }
+
+            item{
+                var child= registeredChildren[7]
+                ChildCard(child = child!!) {
+                    reportParentViewModel.viewReport(child!!)
+                    childrenViewModel.viewReport()
+                }
+            }
+        }
+    }
+
+    if (userEmail=="pruebatutor@mail.com"){
+
+        LazyColumn {
+
+            item {
+                var child = registeredChildren[5]
+                ChildCard(child = child!!) {
+                    reportParentViewModel.viewReport(child!!)
+                    childrenViewModel.viewReport()
+                }
+            }
+
+            item{
+                var child= registeredChildren[6]
+                ChildCard(child = child!!) {
+                    reportParentViewModel.viewReport(child!!)
+                    childrenViewModel.viewReport()
+                }
+            }
+
+            item{
+                var child= registeredChildren[10]
+                ChildCard(child = child!!) {
+                    reportParentViewModel.viewReport(child!!)
+                    childrenViewModel.viewReport()
+                }
+            }
+            item{
+                var child= registeredChildren[11]
+                ChildCard(child = child!!) {
+                    reportParentViewModel.viewReport(child!!)
+                    childrenViewModel.viewReport()
+                }
+            }
+        }
+    }
+
 }
 
 
