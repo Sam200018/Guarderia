@@ -15,7 +15,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
 import com.example.guarderia.domain.entities.Evacuation
 import com.example.guarderia.domain.entities.Food
 import com.example.guarderia.domain.viewmodel.ReportParentViewModel
@@ -27,7 +26,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun ReportParentScreen(reportParentViewModel: ReportParentViewModel, navigator: NavHostController){
+fun ReportParentScreen(reportParentViewModel: ReportParentViewModel){
     Scaffold(
         topBar = {
             TopAppBar(
@@ -37,7 +36,7 @@ fun ReportParentScreen(reportParentViewModel: ReportParentViewModel, navigator: 
                     }
                 },
                 navigationIcon = {
-                    IconButton(onClick = {navigator.popBackStack()}){
+                    IconButton(onClick = {reportParentViewModel.back()}){
                         Icon(Icons.Filled.ArrowBack, contentDescription = "BackNavigation")
                     }
                 },
@@ -79,7 +78,7 @@ fun Body(context: Context, reportParentViewModel: ReportParentViewModel)
         Text(tutor.phone, fontSize = 20.sp)
         Spacer(Modifier.size(10.dp))
 
-        // SelectedDate(context, reportCarerViewModel, date)
+        SelectedDate(context, date, setDate = {reportParentViewModel.changeDate(it)})
         Spacer(Modifier.size(15.dp))
 
         Separator("Reporte De Comida Ingerida")
@@ -90,7 +89,7 @@ fun Body(context: Context, reportParentViewModel: ReportParentViewModel)
 
         Separator("Observaciones")
         Spacer(Modifier.size(10.dp))
-        StaticDetails(isEnable = false, detailsRecord, onTextChange = {})
+        StaticDetails(isEnable = false, detailsRecord.value, onTextChange = {})
 
     }
 }
