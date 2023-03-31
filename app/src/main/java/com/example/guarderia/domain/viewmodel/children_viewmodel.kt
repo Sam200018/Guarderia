@@ -10,7 +10,7 @@ val registeredChildren: HashMap<Int, Child> = hashMapOf(
     2 to Child("Kratos Hernandez","hpelayoc@gmail.com","brendamateos.prim@gmail.com",3, hashMapOf()),
     3 to Child("Serre Siete","samuelbaubas@gmail.com","pruebaprofe@mail.com",4, hashMapOf()),
     4 to Child("Bar Simson","hpelayoc@gmail.com","pruebaprofe@mail.com",3, hashMapOf()),
-    5 to Child("Barry Allen","pruebatutor@mail.com","pruebatutor.prim@gmail.com",2, hashMapOf()),
+    5 to Child("Barry Allen","pruebatutor@mail.com","pruebaprofe@mail.com",2, hashMapOf()),
     6 to Child("Bruce Wayne","pruebatutor@mail.com","brendamateos.prim@gmail.com",5, hashMapOf()),
     7 to Child("Lisa Simson","hpelayoc@gmail.com","pruebaprofe@mail.com",3, hashMapOf()),
     8 to Child("Mario Castañeda","samuelbaubas@gmail.com","brendamateos.prim@gmail.com",3, hashMapOf()),
