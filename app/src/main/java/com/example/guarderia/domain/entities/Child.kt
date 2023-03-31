@@ -8,7 +8,7 @@ data class Child(
     val tutormail: String,
     val teachermail: String,
     val age: Int,
-    var overallReport: HashMap<Date, Report>,
+    var overallReport: HashMap<String, Report>,
 )
 
 
