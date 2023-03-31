@@ -8,11 +8,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
-import com.example.guarderia.domain.entities.Child
-import com.example.guarderia.domain.entities.Evacuation
-import com.example.guarderia.domain.entities.Food
-import com.example.guarderia.domain.entities.User
+import com.example.guarderia.domain.entities.*
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
 
 class ReportCarerViewModel(private val navigator: NavHostController) : ViewModel() {
 
@@ -37,14 +36,26 @@ class ReportCarerViewModel(private val navigator: NavHostController) : ViewModel
     fun report(selectedChild: Child) {
         child = selectedChild;
         father = users[child!!.tutormail]
+        if (child!!.overallReport.isNotEmpty()) {
+            _isEditable.value=false
+            val auxDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+            val report = child!!.overallReport[auxDate]
+            _foodReport.addAll(report!!.foodRecord)
+            _evacuationReport.addAll(report.evacuationRecord)
+            _details.value= report.detailsRecord
+        }
     }
 
     fun changeDate(selectedDate: Date) {
-        _date.value = selectedDate
+        if (selectedDate.time > Date().time) {
+            _date.value = Date()
+        } else {
+            _date.value = selectedDate
+        }
         _foodReport.clear()
         _evacuationReport.clear()
         _details.value = ""
-        _isEditable.value=true
+        _isEditable.value = true
 //        TODO: buscar todo
     }
 
@@ -62,13 +73,16 @@ class ReportCarerViewModel(private val navigator: NavHostController) : ViewModel
 
     fun saveDayReport() {
         _isEditable.value = false
+        val auxDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+        val newReport = Report(false, ArrayList(foodReport), ArrayList(evacuationReport), details.value!!)
+        child!!.overallReport[auxDate] = newReport
     }
 
-    fun back(){
+    fun back() {
         navigator.popBackStack()
         _foodReport.clear()
         _evacuationReport.clear()
-        _details.value=""
-        _isEditable.value=true
+        _details.value = ""
+        _isEditable.value = true
     }
 }
