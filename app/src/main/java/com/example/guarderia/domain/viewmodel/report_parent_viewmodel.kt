@@ -12,6 +12,7 @@ import com.example.guarderia.domain.entities.Child
 import com.example.guarderia.domain.entities.Evacuation
 import com.example.guarderia.domain.entities.Food
 import com.example.guarderia.domain.entities.User
+import java.text.SimpleDateFormat
 import java.util.*
 
 class ReportParentViewModel(private val navigator: NavHostController) : ViewModel() {
@@ -37,7 +38,8 @@ class ReportParentViewModel(private val navigator: NavHostController) : ViewMode
     fun viewReport(selectedChild: Child){
         child = selectedChild
         tutor = users[child!!.teachermail]
-        val reportDay=child!!.overallReport[Date()]
+        val auxDate= SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+        val reportDay= child!!.overallReport[auxDate]
         if(reportDay!=null){
             _foodRecord.addAll(reportDay.foodRecord)
             _evacuationRecord.addAll(reportDay.evacuationRecord)
@@ -45,7 +47,7 @@ class ReportParentViewModel(private val navigator: NavHostController) : ViewMode
         }
     }
 
-    fun back(){
+    fun back():Unit{
         navigator.popBackStack()
         _foodRecord.clear()
         _evacuationRecord.clear()
