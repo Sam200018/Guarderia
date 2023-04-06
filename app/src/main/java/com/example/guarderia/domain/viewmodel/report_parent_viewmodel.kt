@@ -12,6 +12,7 @@ import com.example.guarderia.domain.entities.Child
 import com.example.guarderia.domain.entities.Evacuation
 import com.example.guarderia.domain.entities.Food
 import com.example.guarderia.domain.entities.User
+import com.example.guarderia.domain.viewmodel.login.users
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -47,7 +48,7 @@ class ReportParentViewModel(private val navigator: NavHostController) : ViewMode
         }
     }
 
-    fun back():Unit{
+    fun back(){
         navigator.popBackStack()
         _foodRecord.clear()
         _evacuationRecord.clear()

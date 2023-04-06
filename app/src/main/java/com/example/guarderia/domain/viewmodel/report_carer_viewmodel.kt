@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.example.guarderia.domain.entities.*
+import com.example.guarderia.domain.viewmodel.login.users
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -34,7 +35,7 @@ class ReportCarerViewModel(private val navigator: NavHostController) : ViewModel
     val details: LiveData<String> = _details
 
     fun report(selectedChild: Child) {
-        child = selectedChild;
+        child = selectedChild
         father = users[child!!.tutormail]
         if (child!!.overallReport.isNotEmpty()) {
             _isEditable.value=false
@@ -60,7 +61,7 @@ class ReportCarerViewModel(private val navigator: NavHostController) : ViewModel
     }
 
     fun addFoodReport(food: Food) {
-        _foodReport.add(food);
+        _foodReport.add(food)
     }
 
     fun addFoodEvacuationReport(evacuation: Evacuation) {
