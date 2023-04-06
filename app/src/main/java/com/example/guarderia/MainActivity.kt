@@ -12,7 +12,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.guarderia.domain.viewmodel.ChildrenViewModel
 import com.example.guarderia.domain.viewmodel.GroupSelectionViewModel
-import com.example.guarderia.domain.viewmodel.LoginViewModel
 import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
 import com.example.guarderia.domain.viewmodel.ReportParentViewModel
 import com.example.guarderia.ui.routes.Routes
@@ -36,12 +35,12 @@ class MainActivity : ComponentActivity() {
                 ) {
 
                     val navigator = rememberNavController()
-                    val reportCarerViewModel= ReportCarerViewModel(navigator)
+                    val reportCarerViewModel = ReportCarerViewModel(navigator)
                     val reportParentViewModel = ReportParentViewModel(navigator)
 
                     NavHost(navController = navigator, startDestination = Routes.LoginScreen.route) {
 
-                        composable(Routes.LoginScreen.route) { LoginScreen(LoginViewModel(navigator)) }
+                        composable(Routes.LoginScreen.route) { LoginScreen(navigator) }
 
                         composable("${Routes.ChildrenScreen.route}/{userEmail}/{type}") {
                             val userEmail = it.arguments?.getString("userEmail")
@@ -52,7 +51,7 @@ class MainActivity : ComponentActivity() {
                             }
                         }
 
-                        composable("${Routes.GroupSelectionScreen.route}/{userEmail}/{type}"){
+                        composable("${Routes.GroupSelectionScreen.route}/{userEmail}/{type}") {
                             val userEmail = it.arguments?.getString("userEmail")
                             val type = it.arguments?.getString("type")
                             if (userEmail != null) {
@@ -63,10 +62,10 @@ class MainActivity : ComponentActivity() {
                         }
 
                         composable(Routes.ReportCarerScreen.route) {
-                            ReportCarerScreen(reportCarerViewModel,navigator)
+                            ReportCarerScreen(reportCarerViewModel, navigator)
                         }
 
-                        composable(Routes.ReportParentScreen.route){
+                        composable(Routes.ReportParentScreen.route) {
                             ReportParentScreen(reportParentViewModel)
                         }
 
