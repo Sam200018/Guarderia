@@ -5,13 +5,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.guarderia.domain.entities.User
 import com.example.guarderia.ui.routes.Routes
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 
 val users: HashMap<String, User> = hashMapOf(
@@ -66,41 +69,61 @@ class LoginViewModel() : ViewModel() {
         }
     }
 
+    /**
+     *Login using coroutine to simulate a http request
+     */
     fun login(navigator: NavHostController) {
+        viewModelScope.launch {
+//          This indicates the UI the form is submitting
+            _uiState.update {
+                it.copy(isFormSubmitting = true)
+            }
 
-        val userKey = users.get(key = emailInput)
-        if (userKey != null) {
-            if (userKey.password == passwordInput) {
-                type = userKey.type
+//          The UI waits this time
+            delay(2000)
 
-                //TODO: implement isSubmitting but with async functions
-                _uiState.value = LoginUiState(isSuccess = true)
-                if (type == "tutor@") {
-                    navigator.navigate("${Routes.ChildrenScreen.route}/${emailInput}/${type}") {
-                        popUpTo(Routes.LoginScreen.route) {
-                            inclusive = true
+//          Then we look for the user using the email
+            val userKey = users.get(key = emailInput)
+
+//            if we got the user we check the password and finally check if it match with the existent on DB
+//            to navigate the next page depending on if the user is teacher or tutor@
+            if (userKey != null) {
+                if (userKey.password == passwordInput) {
+                    type = userKey.type
+
+                    _uiState.value = LoginUiState(isSuccess = true)
+                    if (type == "tutor@") {
+                        navigator.navigate("${Routes.ChildrenScreen.route}/${emailInput}/${type}") {
+                            popUpTo(Routes.LoginScreen.route) {
+                                inclusive = true
+                            }
+                        }
+                    } else {
+                        navigator.navigate("${Routes.GroupSelectionScreen.route}/${emailInput}/${type}") {
+                            popUpTo(Routes.LoginScreen.route) {
+                                inclusive = true
+                            }
                         }
                     }
+
                 } else {
-                    navigator.navigate("${Routes.GroupSelectionScreen.route}/${emailInput}/${type}") {
-                        popUpTo(Routes.LoginScreen.route) {
-//                                            inclusive = true
-                        }
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isFailure = true,
+                            isFormSubmitting = false,
+                            errorMessage = "Credenciales Incorrectas"
+                        )
                     }
                 }
-
             } else {
                 _uiState.update { currentState ->
-                    currentState.copy(isFailure = true, errorMessage = "Credenciales Incorrectas")
+                    currentState.copy(
+                        isFailure = true,
+                        isFormSubmitting = false,
+                        errorMessage = "Usuario no existe"
+                    )
                 }
-//                _errorMessage.value = "Error! Credenciales incorrectas"
-
             }
-        } else {
-            _uiState.update { currentState ->
-                currentState.copy(isFailure = true, errorMessage = "Usuario no existe")
-            }
-//            _errorMessage.value = "Error! Usario no existe"
         }
 
 

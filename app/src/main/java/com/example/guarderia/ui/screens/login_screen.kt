@@ -78,7 +78,8 @@ fun LoginScreen(
                             navigator
                         )
                     },
-                    errorMessage = loginUiState.errorMessage
+                    errorMessage = loginUiState.errorMessage,
+                    isLoading = loginUiState.isFormSubmitting
                 )
 
             }
@@ -177,22 +178,27 @@ fun LoginButton(
     modifier: Modifier,
     isEnable: Boolean,
     loginClick: () -> Unit,
-    errorMessage: String
+    errorMessage: String,
+    isLoading: Boolean
 ) {
     Column(modifier) {
 
-        Button(
-            enabled = isEnable,
-            onClick = loginClick,
-            modifier = modifier
-                .size(width = 250.dp, height = 50.dp)
-                .clip(CircleShape),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = GeneralColor
-            )
+        if (isLoading){
+            CircularProgressIndicator()
+        }else{
+            Button(
+                enabled = isEnable,
+                onClick = loginClick,
+                modifier = modifier
+                    .size(width = 250.dp, height = 50.dp)
+                    .clip(CircleShape),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = GeneralColor
+                )
 
-        ) {
-            Text(text = "Iniciar sesión", fontSize = 24.sp)
+            ) {
+                Text(text = "Iniciar sesión", fontSize = 24.sp)
+            }
         }
         if (errorMessage.isNotEmpty()) {
             TextFieldError(errorMessage)
