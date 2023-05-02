@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.guarderia.R
 import com.example.guarderia.domain.viewmodel.login.LoginViewModel
 import com.example.guarderia.ui.theme.GeneralColor
 import com.example.guarderia.ui.utils.TextFieldError
@@ -49,9 +51,9 @@ fun LoginScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(vertical = 80.dp, horizontal = 20.dp)
-                    .align(Alignment.Center)
-                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 20.dp)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.Center
             ) {
                 LogoImage()
                 Spacer(modifier = Modifier.size(95.dp))
@@ -96,7 +98,7 @@ fun LogoImage() {
         contentAlignment = Alignment.Center, modifier = Modifier
             .fillMaxWidth()
     ) {
-        Text(text = "¡BIENVENIDO!", fontSize = 30.sp)
+        Text(text = stringResource(id = R.string.welcome_message), fontSize = 30.sp)
     }
 }
 
@@ -110,7 +112,7 @@ fun UserInput(email: String, isEmailValid: Boolean, onTextChange: (String) -> Un
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier.fillMaxWidth(),
             label = {
-                Text(text = "Correo Electronico")
+                Text(text = stringResource(id = R.string.email_input_label))
             },
 
             )
@@ -148,7 +150,7 @@ fun PasswordInput(
             }
         },
         label = {
-            Text(text = "Contraseña")
+            Text(text = stringResource(id = R.string.password_input_label))
         },
         visualTransformation = if (isPasswordVisibility) {
             VisualTransformation.None
@@ -167,7 +169,7 @@ fun ForgetPassword(modifier: Modifier) {
             backgroundColor = Color.Transparent
         )
     ) {
-        Text(text = "¿Olvidaste tu contraseña?", textDecoration = TextDecoration.Underline)
+        Text(text = stringResource(id = R.string.forgot_password), textDecoration = TextDecoration.Underline)
 
     }
 
@@ -183,9 +185,9 @@ fun LoginButton(
 ) {
     Column(modifier) {
 
-        if (isLoading){
+        if (isLoading) {
             CircularProgressIndicator()
-        }else{
+        } else {
             Button(
                 enabled = isEnable,
                 onClick = loginClick,
@@ -197,7 +199,7 @@ fun LoginButton(
                 )
 
             ) {
-                Text(text = "Iniciar sesión", fontSize = 24.sp)
+                Text(text = stringResource(id = R.string.login_button_label), fontSize = 24.sp)
             }
         }
         if (errorMessage.isNotEmpty()) {
