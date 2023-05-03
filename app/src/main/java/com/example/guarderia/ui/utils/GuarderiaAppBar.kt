@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.example.guarderia.ui.routes.GuarderiaRoutes
 
 @Composable
@@ -18,7 +19,7 @@ fun GuarderiaAppBar(
     navigateUp: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    TopAppBar(title = { Text(text = currentRoute.name) },
+    TopAppBar(title = { Text(text = stringResource(id = currentRoute.title)) },
         modifier = modifier,
         navigationIcon = {
             if (canNavigateBack) {

@@ -7,4 +7,6 @@
     <string name="login_button_label">Iniciar sesión</string>
     <string name="wrong_credentials">Credenciales incorrectas</string>
     <string name="not_user">El usuario no existe</string>
+    <string name="login"> </string>
+    <string name="announcements">Anuncios</string>
 </resources>
