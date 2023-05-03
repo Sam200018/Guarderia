@@ -46,48 +46,42 @@ fun LoginScreen(
 
 
 
-    Scaffold(modifier = Modifier.fillMaxSize()) { it ->
-        Box(modifier = Modifier.padding(it)) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 20.dp)
-                    .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.Center
-            ) {
-                LogoImage()
-                Spacer(modifier = Modifier.size(95.dp))
-                UserInput(loginViewModel.emailInput, loginUiState.isEmailValid) {
-                    loginViewModel.onEmailChange(it)
-                }
-                Spacer(modifier = Modifier.size(40.dp))
-                PasswordInput(
-                    loginViewModel,
-                    loginViewModel.passwordInput,
-                    loginUiState.isPasswordVisible,
-                    loginUiState.isPasswordValid
-                ) {
-                    loginViewModel.onPasswordChange(it)
-                }
-                Spacer(modifier = Modifier.size(5.dp))
-                ForgetPassword(Modifier.align(Alignment.End))
-                Spacer(modifier = Modifier.size(20.dp))
-                LoginButton(
-                    Modifier.align(Alignment.CenterHorizontally),
-                    isEnable = isLoginEnable && isNotEmptyForm && !isLoginError,
-                    isFailure = isLoginError,
-                    loginClick = {
-                        loginViewModel.login(
-                            navigator
-                        )
-                    },
-                    errorMessage = loginUiState.errorMessage,
-                    isLoading = loginUiState.isFormSubmitting
-                )
-
-            }
-
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 20.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Center
+    ) {
+        LogoImage()
+        Spacer(modifier = Modifier.size(95.dp))
+        UserInput(loginViewModel.emailInput, loginUiState.isEmailValid) {
+            loginViewModel.onEmailChange(it)
         }
+        Spacer(modifier = Modifier.size(40.dp))
+        PasswordInput(
+            loginViewModel,
+            loginViewModel.passwordInput,
+            loginUiState.isPasswordVisible,
+            loginUiState.isPasswordValid
+        ) {
+            loginViewModel.onPasswordChange(it)
+        }
+        Spacer(modifier = Modifier.size(5.dp))
+        ForgetPassword(Modifier.align(Alignment.End))
+        Spacer(modifier = Modifier.size(20.dp))
+        LoginButton(
+            Modifier.align(Alignment.CenterHorizontally),
+            isEnable = isLoginEnable && isNotEmptyForm && !isLoginError,
+            isFailure = isLoginError,
+            loginClick = {
+                loginViewModel.login(
+                    navigator
+                )
+            },
+            errorMessage = loginUiState.errorMessage,
+            isLoading = loginUiState.isFormSubmitting
+        )
 
     }
 }

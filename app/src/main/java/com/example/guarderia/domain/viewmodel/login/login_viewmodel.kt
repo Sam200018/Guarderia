@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
 import com.example.guarderia.R
 import com.example.guarderia.domain.entities.User
-import com.example.guarderia.ui.routes.Routes
+import com.example.guarderia.ui.routes.GuarderiaRoutes
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -94,14 +94,14 @@ class LoginViewModel() : ViewModel() {
 
                     _uiState.value = LoginUiState(isSuccess = true)
                     if (type == "tutor@") {
-                        navigator.navigate("${Routes.ChildrenScreen.route}/${emailInput}/${type}") {
-                            popUpTo(Routes.LoginScreen.route) {
+                        navigator.navigate(GuarderiaRoutes.Home.name) {
+                            popUpTo(GuarderiaRoutes.Login.name) {
                                 inclusive = true
                             }
                         }
                     } else {
-                        navigator.navigate("${Routes.GroupSelectionScreen.route}/${emailInput}/${type}") {
-                            popUpTo(Routes.LoginScreen.route) {
+                        navigator.navigate(GuarderiaRoutes.GroupSelectionScreen.name) {
+                            popUpTo(GuarderiaRoutes.Login.name) {
                                 inclusive = true
                             }
                         }
