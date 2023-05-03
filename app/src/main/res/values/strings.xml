@@ -5,4 +5,6 @@
     <string name="password_input_label">Contraseña</string>
     <string name="forgot_password">¿Olvidaste tu contraseña?</string>
     <string name="login_button_label">Iniciar sesión</string>
+    <string name="wrong_credentials">Credenciales incorrectas</string>
+    <string name="not_user">El usuario no existe</string>
 </resources>

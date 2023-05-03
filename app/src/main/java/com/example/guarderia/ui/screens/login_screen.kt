@@ -75,6 +75,7 @@ fun LoginScreen(
                 LoginButton(
                     Modifier.align(Alignment.CenterHorizontally),
                     isEnable = isLoginEnable && isNotEmptyForm && !isLoginError,
+                    isFailure = isLoginError,
                     loginClick = {
                         loginViewModel.login(
                             navigator
@@ -169,7 +170,10 @@ fun ForgetPassword(modifier: Modifier) {
             backgroundColor = Color.Transparent
         )
     ) {
-        Text(text = stringResource(id = R.string.forgot_password), textDecoration = TextDecoration.Underline)
+        Text(
+            text = stringResource(id = R.string.forgot_password),
+            textDecoration = TextDecoration.Underline
+        )
 
     }
 
@@ -179,6 +183,7 @@ fun ForgetPassword(modifier: Modifier) {
 fun LoginButton(
     modifier: Modifier,
     isEnable: Boolean,
+    isFailure: Boolean,
     loginClick: () -> Unit,
     errorMessage: String,
     isLoading: Boolean
@@ -202,7 +207,7 @@ fun LoginButton(
                 Text(text = stringResource(id = R.string.login_button_label), fontSize = 24.sp)
             }
         }
-        if (errorMessage.isNotEmpty()) {
+        if (errorMessage.isNotEmpty() && isFailure) {
             TextFieldError(errorMessage)
         }
 

@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
+import com.example.guarderia.R
 import com.example.guarderia.domain.entities.User
 import com.example.guarderia.ui.routes.Routes
 import kotlinx.coroutines.delay
@@ -111,7 +112,7 @@ class LoginViewModel() : ViewModel() {
                         currentState.copy(
                             isFailure = true,
                             isFormSubmitting = false,
-                            errorMessage = "Credenciales Incorrectas"
+                            errorMessage = R.string.wrong_credentials.toString()
                         )
                     }
                 }
@@ -120,7 +121,7 @@ class LoginViewModel() : ViewModel() {
                     currentState.copy(
                         isFailure = true,
                         isFormSubmitting = false,
-                        errorMessage = "Usuario no existe"
+                        errorMessage = R.string.wrong_credentials.toString()
                     )
                 }
             }
