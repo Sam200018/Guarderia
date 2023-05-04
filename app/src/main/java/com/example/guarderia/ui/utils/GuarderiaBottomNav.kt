@@ -4,12 +4,11 @@ import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -23,13 +22,13 @@ val items = listOf(
 
 @Composable
 fun GuarderiaBottomNav(
+    modifier: Modifier = Modifier,
     bottomNavViewModel: BottomNavViewModel = viewModel(),
     navController: NavController,
-    modifer: Modifier = Modifier
 ) {
     val bottomNavUiState by bottomNavViewModel.uiState.collectAsState()
 
-    BottomNavigation(modifier = modifer) {
+    BottomNavigation(modifier = modifier) {
         items.forEachIndexed { index, item ->
             BottomNavigationItem(
                 selected = bottomNavUiState == index,
@@ -41,7 +40,7 @@ fun GuarderiaBottomNav(
                 },
                 icon = {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack, contentDescription = null
+                        painterResource(id = item.drawableRes), contentDescription = null
                     )
                 },
                 label = { Text(text = stringResource(id = item.title)) }
