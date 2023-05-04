@@ -49,7 +49,7 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
         },
         bottomBar = {
             if (isBottomNavVisible(currentRoute))
-                GuarderiaBottomNav()
+                GuarderiaBottomNav(navController=navController)
         }
     ) {
         NavHost(
