@@ -19,6 +19,7 @@ import com.example.guarderia.ui.screens.ChildrenScreen
 import com.example.guarderia.ui.screens.GroupSelectionScreen
 import com.example.guarderia.ui.screens.HomeScreen
 import com.example.guarderia.ui.screens.LoginScreen
+import com.example.guarderia.ui.screens.NotesScreen
 import com.example.guarderia.ui.screens.ReportCarerScreen
 import com.example.guarderia.ui.screens.ReportParentScreen
 import com.example.guarderia.ui.utils.GuarderiaAppBar
@@ -50,6 +51,12 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
         bottomBar = {
             if (isBottomNavVisible(currentRoute))
                 GuarderiaBottomNav(navController=navController)
+        },
+        floatingActionButton = {
+            if(isFloatingActionButtonVisible(currentRoute)){
+//                TODO:Implemantar el floating action button
+            }
+
         }
     ) {
         NavHost(
@@ -65,6 +72,10 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
 
             composable(GuarderiaRoutes.Home.name) {
                 HomeScreen()
+            }
+
+            composable(GuarderiaRoutes.Notes.name){
+                NotesScreen()
             }
 
             composable("${Routes.ChildrenScreen.route}/{userEmail}/{type}") {
@@ -111,4 +122,10 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
 private fun isBottomNavVisible(currentRoute: GuarderiaRoutes): Boolean {
 //    TODO: Add your created route where you do not want to the bottom navigation appears
     return currentRoute != GuarderiaRoutes.Login
+}
+
+private fun isFloatingActionButtonVisible(currentRoute: GuarderiaRoutes):Boolean{
+//    TODO: Add your created route where you want to the floating action button appears
+    return currentRoute == GuarderiaRoutes.Home || currentRoute == GuarderiaRoutes.Notes
+
 }
