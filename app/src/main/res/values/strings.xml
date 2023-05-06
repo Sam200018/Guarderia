@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Guarderia</string>
+<!--    Login-->
     <string name="welcome_message">¡Bienvenido!</string>
     <string name="email_input_label">Correo electrónico</string>
     <string name="password_input_label">Contraseña</string>
@@ -8,5 +9,12 @@
     <string name="wrong_credentials">Credenciales incorrectas</string>
     <string name="not_user">El usuario no existe</string>
     <string name="login"> </string>
+<!--    Home-->
     <string name="announcements">Anuncios</string>
+    <string name="active_announcements">Activos</string>
+    <string name="expired_announcements">Vencidos</string>
+    <string name="there_is_not_announcements">No has agregado anuncios</string>
+
+<!--    Notes-->
+    <string name="notes">Notas</string>
 </resources>
