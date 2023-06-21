@@ -24,17 +24,17 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import com.example.guarderia.R
+import com.example.guarderia.domain.viewmodel.auth.AuthViewModel
 import com.example.guarderia.domain.viewmodel.login.LoginViewModel
 import com.example.guarderia.ui.theme.GeneralColor
 import com.example.guarderia.ui.utils.TextFieldError
 
 @Composable
 fun LoginScreen(
-    navigator: NavHostController,
     loginViewModel: LoginViewModel = viewModel(),
-) {
+    authViewModel: AuthViewModel,
+    ) {
     //Ui State
     val loginUiState by loginViewModel.uiState.collectAsState()
 
@@ -43,7 +43,6 @@ fun LoginScreen(
     val isNotEmptyForm =
         (loginViewModel.emailInput.isNotEmpty() && loginViewModel.passwordInput.isNotEmpty())
     val isLoginError = loginUiState.isFailure
-
 
 
     Column(
@@ -75,9 +74,7 @@ fun LoginScreen(
             isEnable = isLoginEnable && isNotEmptyForm && !isLoginError,
             isFailure = isLoginError,
             loginClick = {
-                loginViewModel.login(
-                    navigator
-                )
+                authViewModel.login(loginViewModel.emailInput, loginViewModel.passwordInput)
             },
             errorMessage = loginUiState.errorMessage,
             isLoading = loginUiState.isFormSubmitting

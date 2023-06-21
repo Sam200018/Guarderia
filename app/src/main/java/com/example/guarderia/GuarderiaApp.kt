@@ -93,7 +93,7 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
                         )
                     }
                 }
-                LoginScreen(navController, authViewModel = authViewModel)
+                LoginScreen(authViewModel = authViewModel)
 
             }
 
