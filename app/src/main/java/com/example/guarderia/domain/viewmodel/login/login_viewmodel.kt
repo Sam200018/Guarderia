@@ -60,7 +60,7 @@ class LoginViewModel() : ViewModel() {
     fun onPasswordChange(password: String) {
         passwordInput = password
         _uiState.update { currentState ->
-            currentState.copy(isPasswordValid = password.length > 6, isFailure = false)
+            currentState.copy(isPasswordValid = true, isFailure = false)
         }
     }
 

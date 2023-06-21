@@ -34,6 +34,7 @@ import com.example.guarderia.ui.utils.TextFieldError
 fun LoginScreen(
     loginViewModel: LoginViewModel = viewModel(),
     authViewModel: AuthViewModel,
+    errorMessage: String
     ) {
     //Ui State
     val loginUiState by loginViewModel.uiState.collectAsState()
@@ -72,11 +73,10 @@ fun LoginScreen(
         LoginButton(
             Modifier.align(Alignment.CenterHorizontally),
             isEnable = isLoginEnable && isNotEmptyForm && !isLoginError,
-            isFailure = isLoginError,
             loginClick = {
                 authViewModel.login(loginViewModel.emailInput, loginViewModel.passwordInput)
             },
-            errorMessage = loginUiState.errorMessage,
+            errorMessage = errorMessage,
             isLoading = loginUiState.isFormSubmitting
         )
 
@@ -174,7 +174,6 @@ fun ForgetPassword(modifier: Modifier) {
 fun LoginButton(
     modifier: Modifier,
     isEnable: Boolean,
-    isFailure: Boolean,
     loginClick: () -> Unit,
     errorMessage: String,
     isLoading: Boolean
@@ -198,7 +197,7 @@ fun LoginButton(
                 Text(text = stringResource(id = R.string.login_button_label), fontSize = 24.sp)
             }
         }
-        if (errorMessage.isNotEmpty() && isFailure) {
+        if (errorMessage.isNotEmpty()) {
             TextFieldError(errorMessage)
         }
 

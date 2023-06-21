@@ -2,7 +2,6 @@ package com.example.guarderia
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,8 +29,6 @@ import com.example.guarderia.ui.screens.ReportCarerScreen
 import com.example.guarderia.ui.screens.ReportParentScreen
 import com.example.guarderia.ui.utils.GuarderiaAppBar
 import com.example.guarderia.ui.utils.GuarderiaBottomNav
-import com.example.guarderia.ui.utils.guarderiaSnackbar
-import kotlinx.coroutines.runBlocking
 
 @Composable
 fun GuarderiaApp(modifier: Modifier = Modifier) {
@@ -43,13 +40,12 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
         GuarderiaRoutes.valueOf(backStackEntry?.destination?.route ?: GuarderiaRoutes.Login.name)
 
     val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory)
-    val authStatus = authViewModel.uiState.collectAsState()
-    val startDestination = when (authStatus.value.authStatus) {
+    val authStatus by authViewModel.uiState.collectAsState()
+    val startDestination = when (authStatus.authStatus) {
         AuthStatus.Authenticated -> GuarderiaRoutes.Home
         AuthStatus.Unauthenticated -> GuarderiaRoutes.Login
         else -> GuarderiaRoutes.Checking
     }
-    val scaffoldState = rememberScaffoldState()
 
 
     val reportCarerViewModel = ReportCarerViewModel(navController)
@@ -57,7 +53,6 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
 
 
     Scaffold(
-        scaffoldState = scaffoldState,
         topBar = {
             if (currentRoute != GuarderiaRoutes.Login) {
                 GuarderiaAppBar(
@@ -85,15 +80,7 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
 
 
             composable(GuarderiaRoutes.Login.name) {
-                if (authStatus.value.errorMessage.isNotEmpty()) {
-                    runBlocking {
-                        guarderiaSnackbar(
-                            scaffoldState = scaffoldState, message = authStatus.value
-                                .errorMessage
-                        )
-                    }
-                }
-                LoginScreen(authViewModel = authViewModel)
+                LoginScreen(authViewModel = authViewModel, errorMessage = authStatus.errorMessage)
 
             }
 
