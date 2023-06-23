@@ -23,17 +23,21 @@ class HomeViewModel(
 
 
     init {
-        checkingRole()
+        viewModelScope.launch {
+            checkingRole()
+        }
     }
 
-    private fun checkingRole() {
-        viewModelScope.launch {
-            val tokenEntity = announcementsRepository.getToken()
-            val user = announcementsRepository.getUser()
-//            val announcement = announcementsRepository.getAllAnnouncementsById(tokenEntity.token)
-            uiState = HomeUiState.Success("Teacher", user.roleId)
-            Log.i("User", user.toString())
-        }
+    suspend fun checkingRole() {
+
+        val tokenEntity = announcementsRepository.getToken()
+        val user = announcementsRepository.getUser()
+        val announcementResponse =
+            announcementsRepository.getAllAnnouncementsById(tokenEntity.token)
+        Log.i("Announcements", announcementResponse.toString())
+        uiState = HomeUiState.Success(announcementResponse.notices, user.roleId)
+        Log.i("User", user.toString())
+
     }
 
     companion object {
