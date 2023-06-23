@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.guarderia.GuarderiaApplication
 import com.example.guarderia.data.AuthRepository
-import com.example.guarderia.data.LoginRequest
+import com.example.guarderia.model.LoginRequest
 import com.example.guarderia.data.TokenEntity
 import com.example.guarderia.model.AuthResponse
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -72,6 +72,7 @@ class AuthViewModel(
     private suspend fun setLoggedUser(response: AuthResponse) {
         val tokenLocal = TokenEntity(1, response.token)
         authRepository.saveToken(tokenLocal)
+        authRepository.saveUser(response.user)
 
         _uiState.value =
             AuthUiState(
