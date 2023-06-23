@@ -21,6 +21,7 @@ enum class GuarderiaRoutes(@StringRes val title: Int,val drawableRes: Int = R.dr
     Login(R.string.login),
     Home(R.string.announcements, R.drawable.annoucements_icon),
     Checking(R.string.checking),
+    AddNotice(R.string.addNotice),
 
     Notes(R.string.notes,R.drawable.notes_icon),
     ChildrenScreen(2),
