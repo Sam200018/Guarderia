@@ -18,7 +18,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.guarderia.R
+import com.example.guarderia.domain.viewmodel.home.HomeUiState
+import com.example.guarderia.domain.viewmodel.home.HomeViewModel
 import com.example.guarderia.ui.theme.EmptyScreenLabelColor
 import com.example.guarderia.ui.theme.FilterBarColor
 import com.example.guarderia.ui.utils.FilterButton
@@ -27,6 +30,21 @@ import com.example.guarderia.ui.utils.FilterButton
 fun HomeScreen(
     modifier: Modifier = Modifier
 ) {
+
+    val homeViewModel: HomeViewModel= viewModel(factory = HomeViewModel.Factory)
+
+    val homeUiState = homeViewModel.uiState
+    when (homeUiState){
+        is HomeUiState.Loading -> CheckingScreen()
+        is HomeUiState.Success-> SuccessPage(modifier = modifier, announcements = homeUiState.announcements)
+        is HomeUiState.Undefined -> Text(text = "No tienes grupo registrado")
+        is HomeUiState.Error -> Text(text = "Error, lo siento")
+    }
+
+}
+
+@Composable
+fun SuccessPage(modifier: Modifier, announcements:String) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -65,14 +83,16 @@ fun HomeScreen(
 
             item {
                 Text(
-                    text = stringResource(id = R.string.there_is_not_announcements),
+                    text = announcements,
                     color = EmptyScreenLabelColor,
                     fontSize = 24.sp
                 )
             }
         }
     }
+
 }
+
 
 @Composable
 fun Spacer(d: Int) {
