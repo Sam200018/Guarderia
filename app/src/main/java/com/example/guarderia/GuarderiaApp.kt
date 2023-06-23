@@ -29,6 +29,7 @@ import com.example.guarderia.ui.screens.ReportCarerScreen
 import com.example.guarderia.ui.screens.ReportParentScreen
 import com.example.guarderia.ui.utils.GuarderiaAppBar
 import com.example.guarderia.ui.utils.GuarderiaBottomNav
+import com.example.guarderia.ui.utils.GuarderiaFloatingActionButton
 
 @Composable
 fun GuarderiaApp(modifier: Modifier = Modifier) {
@@ -67,7 +68,7 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
         },
         floatingActionButton = {
             if (isFloatingActionButtonVisible(currentRoute)) {
-//                TODO:Implemantar el floating action button
+                GuarderiaFloatingActionButton()
             }
 
         }
@@ -95,6 +96,13 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
             composable(GuarderiaRoutes.Notes.name) {
                 NotesScreen()
             }
+
+            composable(GuarderiaRoutes.AddNotice.name){
+
+            }
+
+
+
 
             composable("${Routes.ChildrenScreen.route}/{userEmail}/{type}") {
                 val userEmail = it.arguments?.getString("userEmail")
