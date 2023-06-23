@@ -1,6 +1,8 @@
 package com.example.guarderia.data
 
 import com.example.guarderia.model.AuthResponse
+import com.example.guarderia.model.LoginRequest
+import com.example.guarderia.model.User
 import com.example.guarderia.network.AuthDataSourceRemote
 
 interface AuthRepository {
@@ -8,6 +10,8 @@ interface AuthRepository {
     suspend fun logout()
     suspend fun checkAuthStatus(token: String): AuthResponse
     suspend fun saveToken(token: TokenEntity)
+    suspend fun saveUser(user: User)
+    suspend fun getUser(): User
     suspend fun getToken(): TokenEntity?
     suspend fun deleteToken()
 }
@@ -26,6 +30,9 @@ class AuthRepositoryImpl(
         authDataSourceRemote.checkStatus(token)
 
     override suspend fun saveToken(token: TokenEntity) = authDataSourceLocal.saveToken(token)
+    override suspend fun saveUser(user: User) = authDataSourceLocal.saveUser(user)
+
+    override suspend fun getUser(): User = authDataSourceLocal.getUser()
 
     override suspend fun getToken(): TokenEntity? = authDataSourceLocal.getToken()
 
