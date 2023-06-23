@@ -59,7 +59,8 @@ class AuthViewModel(
     }
 
     suspend fun logout(errorMessage: String?) {
-//        authRepository.logout()
+        val tokenEntity= authRepository.getToken()
+        authRepository.logout(tokenEntity!!.token)
         authRepository.deleteToken()
 
         _uiState.value = AuthUiState(
