@@ -7,7 +7,7 @@ import com.example.guarderia.network.AuthDataSourceRemote
 
 interface AuthRepository {
     suspend fun login(loginRequest: LoginRequest): AuthResponse
-    suspend fun logout()
+    suspend fun logout(token: String)
     suspend fun checkAuthStatus(token: String): AuthResponse
     suspend fun saveToken(token: TokenEntity)
     suspend fun saveUser(user: User)
@@ -24,7 +24,7 @@ class AuthRepositoryImpl(
     override suspend fun login(loginRequest: LoginRequest): AuthResponse =
         authDataSourceRemote.login(loginRequest)
 
-    override suspend fun logout() = authDataSourceRemote.logout()
+    override suspend fun logout(token: String) = authDataSourceRemote.logout(token)
 
     override suspend fun checkAuthStatus(token: String): AuthResponse =
         authDataSourceRemote.checkStatus(token)
