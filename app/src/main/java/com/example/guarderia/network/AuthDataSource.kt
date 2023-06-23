@@ -1,6 +1,6 @@
 package com.example.guarderia.network
 
-import com.example.guarderia.data.LoginRequest
+import com.example.guarderia.model.LoginRequest
 import com.example.guarderia.model.AuthResponse
 import retrofit2.http.POST
 import retrofit2.http.Body
