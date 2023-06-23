@@ -19,7 +19,9 @@ sealed class Routes(val route: String) {
  */
 enum class GuarderiaRoutes(@StringRes val title: Int,val drawableRes: Int = R.drawable.annoucements_icon) {
     Login(R.string.login),
+    Announcement(R.string.announcements),
     Home(R.string.announcements, R.drawable.annoucements_icon),
+
     Checking(R.string.checking),
     AddNotice(R.string.addNotice),
 
