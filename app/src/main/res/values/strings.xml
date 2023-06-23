@@ -18,4 +18,5 @@
 
 <!--    Notes-->
     <string name="notes">Notas</string>
+    <string name="addNotice">Agregar notas</string>
 </resources>
