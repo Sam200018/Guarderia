@@ -13,7 +13,7 @@ interface AuthDataSourceRemote {
     suspend fun login(@Body loginRequest: LoginRequest):AuthResponse
 
     @POST("logout")
-    suspend fun logout()
+    suspend fun logout(@Header("Authorization")token: String)
 
     @GET("check-status")
     suspend fun checkStatus(@Header("Authorization")token:String): AuthResponse
