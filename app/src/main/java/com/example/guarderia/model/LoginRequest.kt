@@ -1,4 +1,4 @@
-package com.example.guarderia.data
+package com.example.guarderia.model
 
 import com.google.gson.annotations.SerializedName
 
