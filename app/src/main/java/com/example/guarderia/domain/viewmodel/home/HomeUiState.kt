@@ -1,14 +1,16 @@
 package com.example.guarderia.domain.viewmodel.home
 
-sealed interface HomeUiState{
+import com.example.guarderia.model.Announcement
 
-    data class Success(val announcements:String,val type: Int): HomeUiState
+sealed interface HomeUiState {
 
-    object Undefined: HomeUiState
+    data class Success(val announcements: List<Announcement>, val type: Int) : HomeUiState
 
-    object Loading: HomeUiState
+    object Undefined : HomeUiState
 
-    object Error: HomeUiState
+    object Loading : HomeUiState
+
+    object Error : HomeUiState
 
 
 }

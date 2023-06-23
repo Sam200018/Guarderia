@@ -7,36 +7,47 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.guarderia.R
 import com.example.guarderia.domain.viewmodel.home.HomeUiState
 import com.example.guarderia.domain.viewmodel.home.HomeViewModel
-import com.example.guarderia.ui.theme.EmptyScreenLabelColor
+import com.example.guarderia.model.Announcement
 import com.example.guarderia.ui.theme.FilterBarColor
+import com.example.guarderia.ui.utils.AnnouncementTab
 import com.example.guarderia.ui.utils.FilterButton
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    homeViewModel: HomeViewModel
 ) {
 
-    val homeViewModel: HomeViewModel= viewModel(factory = HomeViewModel.Factory)
 
     val homeUiState = homeViewModel.uiState
-    when (homeUiState){
+    when (homeUiState) {
         is HomeUiState.Loading -> CheckingScreen()
-        is HomeUiState.Success-> SuccessPage(modifier = modifier, announcements = homeUiState.announcements)
+        is HomeUiState.Success -> SuccessPage(
+            modifier = modifier,
+            announcements = homeUiState.announcements,
+            homeUiState.type,
+            homeViewModel
+        )
+
         is HomeUiState.Undefined -> Text(text = "No tienes grupo registrado")
         is HomeUiState.Error -> Text(text = "Error, lo siento")
     }
@@ -44,52 +55,69 @@ fun HomeScreen(
 }
 
 @Composable
-fun SuccessPage(modifier: Modifier, announcements:String) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(20.dp),
-        verticalArrangement = Arrangement.Top,
-    ) {
+fun SuccessPage(
+    modifier: Modifier,
+    announcements: List<Announcement>,
+    roleId: Int,
+    homeViewModel: HomeViewModel
+) {
 
-        Row(
-            modifier
-                .fillMaxWidth()
-                .background(color = FilterBarColor)
-        ) {
-            FilterButton(
-                text = stringResource(id = R.string.active_announcements),
-                selected = true
-            ) {
+    var refreshig by remember {
+        mutableStateOf(false)
+    }
 
-            }
-            Spacer(d = 10)
-            FilterButton(
-                text = stringResource(id = R.string.expired_announcements),
-                selected = false
-            ) {
-
-            }
-
+    LaunchedEffect(refreshig) {
+        if (refreshig) {
+            homeViewModel.checkingRole()
+            refreshig = false
         }
+    }
+    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = refreshig), onRefresh = {
+            refreshig = true
+    }) {
 
 
-        LazyColumn(
-            modifier
+        Column(
+            modifier = modifier
                 .fillMaxSize()
-                .padding(top = 110.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .padding(20.dp),
+            verticalArrangement = Arrangement.Top,
         ) {
 
-            item {
-                Text(
-                    text = announcements,
-                    color = EmptyScreenLabelColor,
-                    fontSize = 24.sp
-                )
+            Row(
+                modifier
+                    .fillMaxWidth()
+                    .background(color = FilterBarColor)
+            ) {
+                FilterButton(
+                    text = stringResource(id = R.string.active_announcements),
+                    selected = true
+                ) {
+
+                }
+                Spacer(d = 10)
+                FilterButton(
+                    text = stringResource(id = R.string.expired_announcements),
+                    selected = false
+                ) {
+
+                }
+
+            }
+
+
+            LazyColumn(
+                modifier
+                    .fillMaxSize()
+            ) {
+                items(announcements.size) {
+                    AnnouncementTab(modifier = modifier, announcement = announcements[it])
+                    Box(modifier.height(10.dp))
+                }
             }
         }
     }
+
 
 }
 
@@ -97,10 +125,4 @@ fun SuccessPage(modifier: Modifier, announcements:String) {
 @Composable
 fun Spacer(d: Int) {
     Box(Modifier.width(d.dp))
-}
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HomeScreen()
 }
