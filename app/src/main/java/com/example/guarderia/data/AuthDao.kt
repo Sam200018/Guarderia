@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import com.example.guarderia.model.User
 
 @Entity(tableName = "tokens")
 data class TokenEntity(
@@ -25,5 +26,11 @@ interface AuthDao {
 
     @Query("DELETE FROM tokens")
     suspend fun removeToken()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun saveUser(user: User)
+
+    @Query("SELECT * from user")
+    suspend fun getUser():User
 
 }
