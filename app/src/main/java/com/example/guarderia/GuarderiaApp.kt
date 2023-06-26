@@ -34,8 +34,7 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute =
-        Routes.fromValue(backStackEntry?.destination?.route?:"")
-
+        Routes.fromValue(backStackEntry?.destination?.route ?: "checking")
     val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory)
     val authStatus by authViewModel.uiState.collectAsState()
     val startDestination = when (authStatus.authStatus) {
@@ -95,10 +94,10 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
             composable(Routes.AddNotice.route) {
                 AddNotice(navController = navController, homeViewModel = homeViewModel)
             }
-            composable(Routes.ViewNotice.route+"/{id}"){ navBackStackEntry ->
-                val announcementId= navBackStackEntry.arguments!!.getInt("id")
-                Log.i("id",announcementId.toString())
-                ViewNoticeScreen(announcementId)
+            composable(Routes.ViewNotice.route + "/{id}") { navBackStackEntry ->
+                val announcementId = navBackStackEntry.arguments!!.getString("id")
+                Log.i("id", announcementId.toString())
+                ViewNoticeScreen(announcementId ?: "0")
             }
         }
     }
