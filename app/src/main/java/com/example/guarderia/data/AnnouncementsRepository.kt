@@ -6,7 +6,7 @@ import com.example.guarderia.model.User
 import com.example.guarderia.network.AnnouncementsDataSourceRemote
 
 interface AnnouncementsRepository {
-    suspend fun getToken(): TokenEntity
+    suspend fun getToken(): TokenEntity?
 
     suspend fun getUser(): User
 
@@ -21,7 +21,7 @@ class AnnouncementsRepositoryImpl(
     private val authDataSourceLocal: AuthDao,
     private val announcementsDataSourceRemote: AnnouncementsDataSourceRemote
 ) : AnnouncementsRepository {
-    override suspend fun getToken(): TokenEntity = authDataSourceLocal.getToken()!!
+    override suspend fun getToken(): TokenEntity? = authDataSourceLocal.getToken()
 
     override suspend fun getUser(): User = authDataSourceLocal.getUser()
 
