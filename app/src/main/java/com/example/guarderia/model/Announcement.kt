@@ -11,6 +11,5 @@ data class Announcement (
     @SerializedName("date") val date: String,
     @SerializedName("title") val title: String,
     @SerializedName("body") val body: String,
-    @SerializedName("id_group") val idGroup: Long
 )
 
