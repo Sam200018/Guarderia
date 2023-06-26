@@ -70,20 +70,20 @@ fun ImportanceIcon(modifier: Modifier, importance: Int) {
         enabled = false,
         onClick = { }) {
         when (importance) {
-            1 -> Icon(Icons.Filled.Flag, contentDescription = "", tint = Color.Red)
-            2 -> Icon(
+            4 -> Icon(Icons.Filled.Flag, contentDescription = "", tint = Color.Red)
+            3 -> Icon(
                 Icons.Filled.Flag,
                 contentDescription = "",
                 tint = colorResource(id = R.color.mediumImportance)
             )
 
-            3 -> Icon(
+            2 -> Icon(
                 Icons.Filled.Flag,
                 contentDescription = "",
                 tint = colorResource(id = R.color.lowImportance)
             )
 
-            4 -> Icon(
+            1 -> Icon(
                 Icons.Filled.Flag,
                 contentDescription = "",
                 tint = colorResource(id = R.color.noImportance)
