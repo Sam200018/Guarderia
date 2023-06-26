@@ -54,7 +54,7 @@ fun HomeScreen(
         )
 
         is HomeUiState.Undefined -> Text(text = "No tienes grupo registrado")
-        is HomeUiState.Error -> Text(text = "Error, lo siento")
+        is HomeUiState.Error -> Text(text = "Error: ${homeUiState.error}, lo siento")
     }
 
 }

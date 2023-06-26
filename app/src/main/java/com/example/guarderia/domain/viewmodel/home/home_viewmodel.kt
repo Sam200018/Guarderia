@@ -1,6 +1,5 @@
 package com.example.guarderia.domain.viewmodel.home
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -29,15 +28,17 @@ class HomeViewModel(
     }
 
     suspend fun checkingRole() {
+        try {
+            val tokenEntity = announcementsRepository.getToken()
+            if (tokenEntity != null) {
+                val user = announcementsRepository.getUser()
+                val announcementResponse =
+                    announcementsRepository.getAllAnnouncementsById(tokenEntity.token)
+                uiState = HomeUiState.Success(announcementResponse.notices, user.roleId)
+            }
 
-        val tokenEntity = announcementsRepository.getToken()
-        if(tokenEntity!=null){
-            val user = announcementsRepository.getUser()
-            val announcementResponse =
-                announcementsRepository.getAllAnnouncementsById(tokenEntity.token)
-            Log.i("Announcements", announcementResponse.toString())
-            uiState = HomeUiState.Success(announcementResponse.notices, user.roleId)
-            Log.i("User", user.toString())
+        }catch (e:Exception){
+            uiState= HomeUiState.Error(e.message?:"")
         }
 
     }

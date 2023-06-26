@@ -10,7 +10,7 @@ sealed interface HomeUiState {
 
     object Loading : HomeUiState
 
-    object Error : HomeUiState
+    data class Error(val error: String) : HomeUiState
 
 
 }
