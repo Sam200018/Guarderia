@@ -24,6 +24,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.guarderia.R
 import com.example.guarderia.domain.viewmodel.announcement.AnnouncementViewModel
+import com.example.guarderia.domain.viewmodel.announcement.AnnouncementsUiState
 import com.example.guarderia.domain.viewmodel.home.HomeViewModel
 import com.example.guarderia.ui.utils.SelectedDate
 import kotlinx.coroutines.runBlocking
@@ -52,7 +54,8 @@ fun AddNotice(
     val scrollState = rememberScrollState()
     val announcementViewModel: AnnouncementViewModel =
         viewModel(factory = AnnouncementViewModel.Factory)
-    val mContext= LocalContext.current
+    val uiState by announcementViewModel.uiState.collectAsState()
+    val mContext = LocalContext.current
 
 
 
@@ -76,9 +79,9 @@ fun AddNotice(
             }
         }
         Box(modifier.height(15.dp))
-        SelectedDate(context = mContext, date = announcementViewModel.dueDateInput , setDate ={
+        SelectedDate(context = mContext, date = announcementViewModel.dueDateInput, setDate = {
             announcementViewModel.onDueDateChange(it)
-        } )
+        })
         Box(modifier.height(15.dp))
         DescriptionInput(
             modifier = modifier,
@@ -90,6 +93,7 @@ fun AddNotice(
         Row(modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
 
             Button(
+                enabled = isSendButtonEnable(uiState,announcementViewModel),
                 onClick = {
                     runBlocking {
                         announcementViewModel.sendAnnouncement()
@@ -102,6 +106,9 @@ fun AddNotice(
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = colorResource(
                         id = R.color.green_button
+                    ),
+                    disabledBackgroundColor = colorResource(
+                        id = R.color.green_button_disable
                     )
                 )
             ) {
@@ -110,6 +117,9 @@ fun AddNotice(
         }
     }
 }
+
+fun isSendButtonEnable(uiState: AnnouncementsUiState, announcementViewModel: AnnouncementViewModel): Boolean =
+    uiState.isImportanceSelected && uiState.isTitleValid && announcementViewModel.importanceInput!=0
 
 @Composable
 fun TitleInput(modifier: Modifier, title: String, onTextChange: (String) -> Unit) {
@@ -131,20 +141,20 @@ fun ImportanceInput(modifier: Modifier, importance: Int, onInputChange: (Int) ->
     IconButton(modifier = modifier.fillMaxWidth(),
         onClick = { expanded = true }) {
         when (importance) {
-            1 -> Icon(Icons.Filled.Flag, contentDescription = "", tint = Color.Red)
-            2 -> Icon(
+            4 -> Icon(Icons.Filled.Flag, contentDescription = "", tint = Color.Red)
+            3 -> Icon(
                 Icons.Filled.Flag,
                 contentDescription = "",
                 tint = colorResource(id = R.color.mediumImportance)
             )
 
-            3 -> Icon(
+            2 -> Icon(
                 Icons.Filled.Flag,
                 contentDescription = "",
                 tint = colorResource(id = R.color.lowImportance)
             )
 
-            4 -> Icon(
+            1 -> Icon(
                 Icons.Filled.Flag,
                 contentDescription = "",
                 tint = colorResource(id = R.color.noImportance)
@@ -157,7 +167,7 @@ fun ImportanceInput(modifier: Modifier, importance: Int, onInputChange: (Int) ->
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
         DropdownMenuItem(
             onClick = {
-                onInputChange(1)
+                onInputChange(4)
                 expanded = false
             }) {
             Row() {
@@ -167,7 +177,7 @@ fun ImportanceInput(modifier: Modifier, importance: Int, onInputChange: (Int) ->
         }
         DropdownMenuItem(
             onClick = {
-                onInputChange(2)
+                onInputChange(3)
                 expanded = false
             }) {
             Row() {
@@ -181,7 +191,7 @@ fun ImportanceInput(modifier: Modifier, importance: Int, onInputChange: (Int) ->
         }
         DropdownMenuItem(
             onClick = {
-                onInputChange(3)
+                onInputChange(2)
                 expanded = false
             }) {
             Row() {
@@ -195,7 +205,7 @@ fun ImportanceInput(modifier: Modifier, importance: Int, onInputChange: (Int) ->
         }
         DropdownMenuItem(
             onClick = {
-                onInputChange(4)
+                onInputChange(1)
                 expanded = false
             }) {
             Row() {
