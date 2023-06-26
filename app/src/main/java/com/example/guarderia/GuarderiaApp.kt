@@ -8,32 +8,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navigation
-import com.example.guarderia.domain.viewmodel.ChildrenViewModel
-import com.example.guarderia.domain.viewmodel.GroupSelectionViewModel
-import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
-import com.example.guarderia.domain.viewmodel.ReportParentViewModel
 import com.example.guarderia.domain.viewmodel.auth.AuthStatus
 import com.example.guarderia.domain.viewmodel.auth.AuthUiState
 import com.example.guarderia.domain.viewmodel.auth.AuthViewModel
 import com.example.guarderia.domain.viewmodel.home.HomeViewModel
-import com.example.guarderia.ui.routes.GuarderiaRoutes
 import com.example.guarderia.ui.routes.Routes
 import com.example.guarderia.ui.screens.AddNotice
 import com.example.guarderia.ui.screens.CheckingScreen
-import com.example.guarderia.ui.screens.ChildrenScreen
-import com.example.guarderia.ui.screens.GroupSelectionScreen
 import com.example.guarderia.ui.screens.HomeScreen
 import com.example.guarderia.ui.screens.LoginScreen
 import com.example.guarderia.ui.screens.NotesScreen
-import com.example.guarderia.ui.screens.ReportCarerScreen
-import com.example.guarderia.ui.screens.ReportParentScreen
+import com.example.guarderia.ui.screens.ViewNoticeScreen
 import com.example.guarderia.ui.utils.GuarderiaAppBar
 import com.example.guarderia.ui.utils.GuarderiaBottomNav
 import com.example.guarderia.ui.utils.GuarderiaFloatingActionButton
@@ -45,29 +34,25 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute =
-        GuarderiaRoutes.valueOf(backStackEntry?.destination?.route ?: GuarderiaRoutes.Login.name)
+        Routes.fromValue(backStackEntry?.destination?.route?:"")
 
     val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory)
     val authStatus by authViewModel.uiState.collectAsState()
     val startDestination = when (authStatus.authStatus) {
-        AuthStatus.Authenticated -> GuarderiaRoutes.Announcement
-        AuthStatus.Unauthenticated -> GuarderiaRoutes.Login
-        else -> GuarderiaRoutes.Checking
+        AuthStatus.Authenticated -> Routes.Home
+        AuthStatus.Unauthenticated -> Routes.Login
+        else -> Routes.Checking
     }
-
-
-    val reportCarerViewModel = ReportCarerViewModel(navController)
-    val reportParentViewModel = ReportParentViewModel(navController)
 
 
     Scaffold(
         topBar = {
-            if (currentRoute != GuarderiaRoutes.Login) {
+            if (currentRoute.route != Routes.Login.route) {
                 GuarderiaAppBar(
                     currentRoute = currentRoute,
                     canNavigateBack = navController.previousBackStackEntry != null,
                     navigateUp = { navController.navigateUp() },
-                    authViewModel= authViewModel,
+                    authViewModel = authViewModel,
                     isLogoutEnable = isLogoutVisible(currentRoute)
                 )
             }
@@ -78,7 +63,7 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
         },
         floatingActionButton = {
             if (isFloatingActionButtonVisible(currentRoute, authStatus)) {
-                GuarderiaFloatingActionButton(navController,currentRoute.name)
+                GuarderiaFloatingActionButton(navController, currentRoute.route)
             }
 
         }
@@ -87,95 +72,54 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
         NavHost(
             navController = navController,
             modifier = Modifier.padding(it),
-            startDestination = startDestination.name
+            startDestination = startDestination.route
         ) {
 
 
-            composable(GuarderiaRoutes.Login.name) {
+            composable(Routes.Login.route) {
                 LoginScreen(authViewModel = authViewModel, errorMessage = authStatus.errorMessage)
 
             }
 
-            composable(GuarderiaRoutes.Checking.name){
+            composable(Routes.Checking.route) {
                 CheckingScreen()
             }
 
-            composable(GuarderiaRoutes.Notes.name) {
+            composable(Routes.Notes.route) {
                 NotesScreen()
             }
 
-            announcementsGraph(navController, homeViewModel)
-
-
-
-            composable("${Routes.ChildrenScreen.route}/{userEmail}/{type}") {
-                val userEmail = it.arguments?.getString("userEmail")
-                val type = it.arguments?.getString("type")
-
-                if (userEmail != null && type != null) {
-                    ChildrenScreen(
-                        ChildrenViewModel(navController),
-                        reportCarerViewModel,
-                        reportParentViewModel,
-                        userEmail,
-                        type
-                    )
-                }
+            composable(Routes.Home.route) {
+                HomeScreen(Modifier, homeViewModel, navController)
             }
-
-            composable("${Routes.GroupSelectionScreen.route}/{userEmail}/{type}") {
-                val userEmail = it.arguments?.getString("userEmail")
-                val type = it.arguments?.getString("type")
-                if (userEmail != null) {
-                    if (type != null) {
-                        GroupSelectionScreen(
-                            GroupSelectionViewModel(navController),
-                            reportCarerViewModel,
-                            userEmail,
-                            type
-                        )
-                    }
-                }
+            composable(Routes.AddNotice.route) {
+                AddNotice(navController = navController, homeViewModel = homeViewModel)
             }
-
-            composable(Routes.ReportCarerScreen.route) {
-                ReportCarerScreen(reportCarerViewModel, navController)
-            }
-
-            composable(Routes.ReportParentScreen.route) {
-                ReportParentScreen(reportParentViewModel)
+            composable(Routes.ViewNotice.route+"/{id}"){ navBackStackEntry ->
+                val announcementId= navBackStackEntry.arguments!!.getInt("id")
+                Log.i("id",announcementId.toString())
+                ViewNoticeScreen(announcementId)
             }
         }
     }
 }
 
-fun isLogoutVisible(currentRoute: GuarderiaRoutes): Boolean {
-    return currentRoute==GuarderiaRoutes.Home || currentRoute== GuarderiaRoutes.Notes
-}
-
-fun NavGraphBuilder.announcementsGraph(navController: NavController, homeViewModel: HomeViewModel){
-
-    navigation(startDestination = GuarderiaRoutes.Home.name, route = GuarderiaRoutes.Announcement.name){
-        composable(GuarderiaRoutes.Home.name) {
-            HomeScreen(Modifier,homeViewModel)
-        }
-        composable(GuarderiaRoutes.AddNotice.name){
-            AddNotice(navController = navController, homeViewModel = homeViewModel)
-        }
-    }
+fun isLogoutVisible(currentRoute: Routes): Boolean {
+    return currentRoute.route == Routes.Home.route || currentRoute.route == Routes.Notes.route
 }
 
 
-
-
-private fun isBottomNavVisible(currentRoute: GuarderiaRoutes): Boolean {
+private fun isBottomNavVisible(currentRoute: Routes): Boolean {
 //    TODO: Add your created route where you do not want to the bottom navigation appears
-    Log.i("Route Nav", currentRoute.name)
-    return currentRoute != GuarderiaRoutes.Login && currentRoute != GuarderiaRoutes.AddNotice
+    Log.i("Route Nav", currentRoute.route)
+    return currentRoute.route != Routes.Login.route && currentRoute.route != Routes.AddNotice.route
 }
 
-private fun isFloatingActionButtonVisible(currentRoute: GuarderiaRoutes, authStatus: AuthUiState): Boolean {
+private fun isFloatingActionButtonVisible(
+    currentRoute: Routes,
+    authStatus: AuthUiState
+): Boolean {
 //    TODO: Add your created route where you want to the floating action button appears
-    return currentRoute == GuarderiaRoutes.Home || currentRoute == GuarderiaRoutes.Notes && authStatus.user?.roleId!=2
+    return currentRoute.route == Routes.Home.route || currentRoute.route == Routes.Notes.route && authStatus.user?.roleId != 2
 
 }
