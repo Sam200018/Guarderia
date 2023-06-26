@@ -20,7 +20,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.outlined.Flag
@@ -32,6 +31,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -40,6 +40,7 @@ import androidx.navigation.NavController
 import com.example.guarderia.R
 import com.example.guarderia.domain.viewmodel.announcement.AnnouncementViewModel
 import com.example.guarderia.domain.viewmodel.home.HomeViewModel
+import com.example.guarderia.ui.utils.SelectedDate
 import kotlinx.coroutines.runBlocking
 
 @Composable
@@ -51,6 +52,8 @@ fun AddNotice(
     val scrollState = rememberScrollState()
     val announcementViewModel: AnnouncementViewModel =
         viewModel(factory = AnnouncementViewModel.Factory)
+    val mContext= LocalContext.current
+
 
 
 
@@ -73,9 +76,9 @@ fun AddNotice(
             }
         }
         Box(modifier.height(15.dp))
-        TextButton(onClick = { /*TODO*/ }) {
-            Text(text = "Fecha")
-        }
+        SelectedDate(context = mContext, date = announcementViewModel.dueDateInput , setDate ={
+            announcementViewModel.onDueDateChange(it)
+        } )
         Box(modifier.height(15.dp))
         DescriptionInput(
             modifier = modifier,
