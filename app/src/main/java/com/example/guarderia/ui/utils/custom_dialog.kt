@@ -7,14 +7,12 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.example.guarderia.domain.entities.Food
-import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
 import com.example.guarderia.ui.theme.GeneralColor
 
 
 @Composable
-fun CustomDialog(openDialog: MutableState<Boolean>, reportCarerViewModel: ReportCarerViewModel) {
+fun CustomDialog(openDialog: MutableState<Boolean>) {
     val selectedFood = remember { mutableStateOf("") }
     val selectedCode = remember { mutableStateOf("") }
 
@@ -125,7 +123,6 @@ fun CustomDialog(openDialog: MutableState<Boolean>, reportCarerViewModel: Report
                         enabled = (selectedCode.value != "" && selectedFood.value != ""),
                         onClick = {
                             val newFood = Food(selectedFood.value, selectedCode.value)
-                            reportCarerViewModel.addFoodReport(newFood)
 
                             selectedCode.value = ""
                             selectedFood.value = ""
