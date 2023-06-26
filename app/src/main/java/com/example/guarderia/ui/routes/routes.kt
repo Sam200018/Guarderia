@@ -26,7 +26,7 @@ sealed class Routes(
                 "announcement"->Announcement
                 "checking"->Checking
                 "addNotice"->AddNotice
-                "notice"->ViewNotice
+                "notice/{id}"->ViewNotice
                 "notes"->Notes
                 else -> Home
             }
