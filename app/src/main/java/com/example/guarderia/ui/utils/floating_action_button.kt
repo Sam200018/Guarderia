@@ -8,16 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.colorResource
 import androidx.navigation.NavHostController
 import com.example.guarderia.R
-import com.example.guarderia.ui.routes.GuarderiaRoutes
+import com.example.guarderia.ui.routes.Routes
 
 @Composable
 fun GuarderiaFloatingActionButton(navController: NavHostController, nextRoute: String) {
     FloatingActionButton(onClick = {
         val nextScreen = when (nextRoute) {
-            "Home" -> GuarderiaRoutes.AddNotice
-            else -> GuarderiaRoutes.Home
+            "home" -> Routes.AddNotice
+            else -> Routes.Home
         }
-        navController.navigate(nextScreen.name)
+        navController.navigate(nextScreen.route)
     }, backgroundColor = colorResource(id = R.color.purple_700)) {
         Icon(Icons.Filled.Add, contentDescription = "")
     }
