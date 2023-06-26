@@ -12,13 +12,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.guarderia.domain.viewmodel.auth.AuthViewModel
-import com.example.guarderia.ui.routes.GuarderiaRoutes
+import com.example.guarderia.ui.routes.Routes
 import kotlinx.coroutines.runBlocking
 
 @Composable
 fun GuarderiaAppBar(
     modifier: Modifier = Modifier,
-    currentRoute: GuarderiaRoutes,
+    currentRoute: Routes,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     authViewModel: AuthViewModel,
