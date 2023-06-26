@@ -31,12 +31,14 @@ class HomeViewModel(
     suspend fun checkingRole() {
 
         val tokenEntity = announcementsRepository.getToken()
-        val user = announcementsRepository.getUser()
-        val announcementResponse =
-            announcementsRepository.getAllAnnouncementsById(tokenEntity.token)
-        Log.i("Announcements", announcementResponse.toString())
-        uiState = HomeUiState.Success(announcementResponse.notices, user.roleId)
-        Log.i("User", user.toString())
+        if(tokenEntity!=null){
+            val user = announcementsRepository.getUser()
+            val announcementResponse =
+                announcementsRepository.getAllAnnouncementsById(tokenEntity.token)
+            Log.i("Announcements", announcementResponse.toString())
+            uiState = HomeUiState.Success(announcementResponse.notices, user.roleId)
+            Log.i("User", user.toString())
+        }
 
     }
 

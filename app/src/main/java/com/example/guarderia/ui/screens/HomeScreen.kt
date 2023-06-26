@@ -21,10 +21,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.guarderia.R
 import com.example.guarderia.domain.viewmodel.home.HomeUiState
 import com.example.guarderia.domain.viewmodel.home.HomeViewModel
 import com.example.guarderia.model.Announcement
+import com.example.guarderia.ui.theme.EmptyScreenLabelColor
 import com.example.guarderia.ui.theme.FilterBarColor
 import com.example.guarderia.ui.utils.AnnouncementTab
 import com.example.guarderia.ui.utils.FilterButton
@@ -34,7 +37,8 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    navController: NavHostController
 ) {
 
 
@@ -45,7 +49,8 @@ fun HomeScreen(
             modifier = modifier,
             announcements = homeUiState.announcements,
             homeUiState.type,
-            homeViewModel
+            homeViewModel,
+            navController
         )
 
         is HomeUiState.Undefined -> Text(text = "No tienes grupo registrado")
@@ -59,21 +64,22 @@ fun SuccessPage(
     modifier: Modifier,
     announcements: List<Announcement>,
     roleId: Int,
-    homeViewModel: HomeViewModel
+    homeViewModel: HomeViewModel,
+    navController: NavHostController
 ) {
 
-    var refreshig by remember {
+    var refreshing by remember {
         mutableStateOf(false)
     }
 
-    LaunchedEffect(refreshig) {
-        if (refreshig) {
+    LaunchedEffect(refreshing) {
+        if (refreshing) {
             homeViewModel.checkingRole()
-            refreshig = false
+            refreshing = false
         }
     }
-    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = refreshig), onRefresh = {
-            refreshig = true
+    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = refreshing), onRefresh = {
+            refreshing = true
     }) {
 
 
@@ -106,14 +112,27 @@ fun SuccessPage(
             }
 
 
+            if (announcements.isEmpty()){
+                LazyColumn(modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center){
+                    item {
+                        Text(
+                            text = stringResource(id = R.string.there_is_not_announcements),
+                            color = EmptyScreenLabelColor,
+                            fontSize = 24.sp
+                        )
+                    }
+                }
+            }else{
+
             LazyColumn(
                 modifier
                     .fillMaxSize()
             ) {
                 items(announcements.size) {
-                    AnnouncementTab(modifier = modifier, announcement = announcements[it])
+                    AnnouncementTab(modifier = modifier, announcement = announcements[it],navController)
                     Box(modifier.height(10.dp))
                 }
+            }
             }
         }
     }
