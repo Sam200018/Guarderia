@@ -3,32 +3,34 @@ package com.example.guarderia.ui.routes
 import androidx.annotation.StringRes
 import com.example.guarderia.R
 
-sealed class Routes(val route: String) {
-    object LoginScreen : Routes("login")
-    object ChildrenScreen : Routes("children")
-    object ReportCarerScreen : Routes("reportCarer")
-    object ReportParentScreen : Routes("reportParent")
-    object GroupSelectionScreen : Routes("groupSelection")
+sealed class Routes(
+    val route: String,
+    @StringRes val title: Int,
+    val drawableRes: Int = R.drawable.annoucements_icon
+) {
+    object Login : Routes("login", R.string.login)
+    object Announcement : Routes("announcement", R.string.announcements)
+    object Home : Routes("home", R.string.announcements, R.drawable.annoucements_icon)
+    object Checking : Routes("checking", R.string.checking)
+    object AddNotice : Routes("addNotice", R.string.addNotice)
+    object ViewNotice : Routes("notice", R.string.notice)
+    object Notes : Routes("notes", R.string.notes, R.drawable.notes_icon)
+//    object ReportParentScreen : Routes("reportParent")
+//    object GroupSelectionScreen : Routes("groupSelection")
+
+    companion object{
+        fun fromValue(value: String):Routes{
+            return when(value){
+                "login"->Login
+                "home"->Home
+                "announcement"->Announcement
+                "checking"->Checking
+                "addNotice"->AddNotice
+                "notice"->ViewNotice
+                "notes"->Notes
+                else -> Home
+            }
+        }
+    }
 }
-/**
- * Favor de usar esta notacion para crear nuevas rutas dentro de la app
- * y solo agregan el titulo dentro de res>values>string.xml para que aqui lo
- * lo pueda usar, solo agregar drawable res a las pages que aparecen en el bottom nav bar
- * La puse por defecto para que no se quejen las demas pero les dejo como ejemplo Home para que
- * la sigan de esta manera, los iconos voy a tratar de que esten ya agregados sino favor de pedirlos
- */
-enum class GuarderiaRoutes(@StringRes val title: Int,val drawableRes: Int = R.drawable.annoucements_icon) {
-    Login(R.string.login),
-    Announcement(R.string.announcements),
-    Home(R.string.announcements, R.drawable.annoucements_icon),
 
-    Checking(R.string.checking),
-    AddNotice(R.string.addNotice),
-
-    Notes(R.string.notes,R.drawable.notes_icon),
-    ChildrenScreen(2),
-    ReportCarerScreen(3),
-    ReportParentScreen(4),
-    GroupSelectionScreen(5),
-
-}
