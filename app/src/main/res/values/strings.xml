@@ -12,13 +12,14 @@
     <string name="login"> </string>
 <!--    Home-->
     <string name="announcements">Anuncios</string>
-    <string name="addNotice">Crear anunncio</string>
+    <string name="addNotice">Crear anuncio</string>
+    <string name="notice">Anuncio</string>
+
     <string name="announcementTitle">Titulo</string>
     <string name="announcementDescription">Descripcion</string>
     <string name="active_announcements">Activos</string>
     <string name="expired_announcements">Vencidos</string>
     <string name="there_is_not_announcements">No has agregado anuncios</string>
-
 <!--    Notes-->
     <string name="notes">Notas</string>
 </resources>
