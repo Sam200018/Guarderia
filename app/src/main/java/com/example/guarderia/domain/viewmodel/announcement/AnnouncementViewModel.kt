@@ -12,6 +12,9 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.guarderia.GuarderiaApplication
 import com.example.guarderia.data.AnnouncementsRepository
 import com.example.guarderia.model.Announcement
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -19,6 +22,9 @@ import java.util.Locale
 class AnnouncementViewModel(
     private val announcementsRepository: AnnouncementsRepository
 ) : ViewModel() {
+
+    var uiState = MutableStateFlow(AnnouncementsUiState())
+        private set
 
     var titleInput: String by mutableStateOf("")
         private set
@@ -34,10 +40,20 @@ class AnnouncementViewModel(
 
     fun onTitleChange(title: String) {
         titleInput = title
+        uiState.update {currentState->
+            currentState.copy(
+                isTitleValid = Regex("^[A-Z0-9].*").matches(titleInput)
+            )
+        }
     }
 
     fun onImportanceChange(importance: Int) {
         importanceInput = importance
+        uiState.update { currentState->
+            currentState.copy(
+                isImportanceSelected = importanceInput!=0
+            )
+        }
     }
 
     fun onDueDateChange(dueDate: Date) {
@@ -56,7 +72,7 @@ class AnnouncementViewModel(
 
         val announcementToSend = Announcement(
             importance = importanceInput,
-            date = SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(dueDateInput),
+            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(dueDateInput),
             title = titleInput,
             body = descriptionInput,
         )
