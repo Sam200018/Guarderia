@@ -5,8 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Announcement (
-    val id: Int= 1,
-
+    val id: Int= 0,
     @SerializedName("importance") val importance: Int,
     @SerializedName("date") val date: String,
     @SerializedName("title") val title: String,
