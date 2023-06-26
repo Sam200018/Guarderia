@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 
 class AuthViewModel(
@@ -59,17 +58,23 @@ class AuthViewModel(
     }
 
     suspend fun logout(errorMessage: String?) {
-        val tokenEntity = authRepository.getToken()
-        if (tokenEntity != null) {
-            authRepository.logout(tokenEntity.token)
-            authRepository.deleteToken()
+
+        try {
+            val tokenEntity = authRepository.getToken()
+            if (tokenEntity != null) {
+                authRepository.logout(tokenEntity.token)
+                authRepository.deleteToken()
+            }
+            _uiState.value = AuthUiState(
+                user = null,
+                authStatus = AuthStatus.Unauthenticated,
+                errorMessage = errorMessage ?: ""
+            )
+
+        } catch (e: Exception) {
+
         }
 
-        _uiState.value = AuthUiState(
-            user = null,
-            authStatus = AuthStatus.Unauthenticated,
-            errorMessage = errorMessage ?: ""
-        )
     }
 
     private suspend fun setLoggedUser(response: AuthResponse) {
