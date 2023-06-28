@@ -19,6 +19,8 @@ import com.example.guarderia.domain.viewmodel.home.HomeViewModel
 import com.example.guarderia.ui.routes.Routes
 import com.example.guarderia.ui.screens.AddNotice
 import com.example.guarderia.ui.screens.CheckingScreen
+import com.example.guarderia.ui.screens.FoodRegisterScreen
+import com.example.guarderia.ui.screens.FoodScreen
 import com.example.guarderia.ui.screens.HomeScreen
 import com.example.guarderia.ui.screens.LoginScreen
 import com.example.guarderia.ui.screens.NotesScreen
@@ -99,6 +101,19 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
                 Log.i("id", announcementId.toString())
                 ViewNoticeScreen(announcementId ?: "0")
             }
+            composable(Routes.Food.route) {
+                FoodScreen(navController = navController)
+            }
+            composable(Routes.BreakfastRegister.route) {
+                FoodRegisterScreen()
+            }
+            composable(Routes.CollationRegister.route) {
+                FoodRegisterScreen()
+            }
+            composable(Routes.LunchRegister.route) {
+                FoodRegisterScreen()
+            }
+
         }
     }
 }
@@ -109,7 +124,7 @@ fun isLogoutVisible(currentRoute: Routes): Boolean {
 
 
 private fun isBottomNavVisible(currentRoute: Routes): Boolean {
-//    TODO: Add your created route where you do not want to the bottom navigation appears
+//    TODO: Add your created route where you do not want to the bottom navigation appearsa
     Log.i("Route Nav", currentRoute.route)
     return currentRoute.route != Routes.Login.route && currentRoute.route != Routes.AddNotice.route
 }
