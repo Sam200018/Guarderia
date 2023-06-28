@@ -19,7 +19,8 @@ import com.example.guarderia.ui.theme.FilterButtonDisableColor
 //TODO: Add all the titles of the bottom bar
 val items = listOf(
     Routes.Home,
-    Routes.Notes
+    Routes.Notes,
+    Routes.Food,
 )
 
 @Composable
