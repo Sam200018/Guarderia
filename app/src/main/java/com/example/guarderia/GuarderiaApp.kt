@@ -134,6 +134,6 @@ private fun isFloatingActionButtonVisible(
     authStatus: AuthUiState
 ): Boolean {
 //    TODO: Add your created route where you want to the floating action button appears
-    return currentRoute.route == Routes.Home.route || currentRoute.route == Routes.Notes.route && authStatus.user?.roleId != 2
+    return (currentRoute.route == Routes.Home.route || currentRoute.route == Routes.Notes.route) && authStatus.user?.roleId != 2
 
 }
