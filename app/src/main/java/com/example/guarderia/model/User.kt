@@ -2,7 +2,7 @@ package com.example.guarderia.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.serialization.SerialName
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Entity
@@ -13,6 +13,6 @@ data class User(
     val name: String,
     val email: String,
     val telephone: String,
-    @SerialName("role_id")
+    @SerializedName("role_id")
     val roleId:Int
 )
