@@ -70,7 +70,7 @@ fun AnnouncementTab(
                     Text(text = announcement.title, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Text(text = announcement.body, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
-                if (authStatus.user?.roleId != 0){
+                if (authStatus.user?.roleId ==1){
                     DotsButton(announcement.id)}
             }
         }
