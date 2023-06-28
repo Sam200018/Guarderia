@@ -10,8 +10,13 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-<!--    Announcements Colors-->
+    <!--    Announcements Colors-->
     <color name="mediumImportance">#FFD233</color>
     <color name="lowImportance">#699BF7</color>
     <color name="noImportance">#545454</color>
+
+    <!--    Food Buttons color-->
+    <color name="breakfastColor">#F3A712</color>
+    <color name="collationColor">#EBA3A3</color>
+    <color name="lunchColor">#7FB800</color>
 </resources>
