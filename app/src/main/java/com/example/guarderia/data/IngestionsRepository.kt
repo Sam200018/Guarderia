@@ -1,0 +1,17 @@
+package com.example.guarderia.data
+
+import com.example.guarderia.model.IngestionsRequest
+import com.example.guarderia.model.IngestionsResponse
+import com.example.guarderia.network.IngestionsDataSourceRemote
+
+interface IngestionsRepository {
+    suspend fun getIngestionsByGroup(token: String, ingestionsRequest: IngestionsRequest):IngestionsResponse
+}
+
+class IngestionsRepositoryImpl(
+    private val ingestionsDataSourceRemote: IngestionsDataSourceRemote
+) : IngestionsRepository {
+
+    override suspend fun getIngestionsByGroup(token: String, ingestionsRequest: IngestionsRequest) =
+        ingestionsDataSourceRemote.getIngestionsByGroup(token, ingestionsRequest.type,ingestionsRequest.date)
+}
