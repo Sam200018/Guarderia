@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.guarderia.R
-import com.example.guarderia.domain.viewmodel.home.HomeUiState
 import com.example.guarderia.domain.viewmodel.home.HomeViewModel
+import com.example.guarderia.domain.viewmodel.home.UiStatus
 import com.example.guarderia.model.Announcement
 import com.example.guarderia.ui.theme.EmptyScreenLabelColor
 import com.example.guarderia.ui.theme.FilterBarColor
@@ -42,19 +43,26 @@ fun HomeScreen(
 ) {
 
 
-    val homeUiState = homeViewModel.uiState
-    when (homeUiState) {
-        is HomeUiState.Loading -> CheckingScreen()
-        is HomeUiState.Success -> SuccessPage(
-            modifier = modifier,
-            announcements = homeUiState.announcements,
-            homeUiState.type,
-            homeViewModel,
-            navController
-        )
-
-        is HomeUiState.Undefined -> Text(text = "No tienes grupo registrado")
-        is HomeUiState.Error -> Text(text = "Error: ${homeUiState.error}, lo siento")
+    val homeUiState by homeViewModel.uiState.collectAsState()
+    when (homeUiState.uiStatus) {
+        UiStatus.Success -> {
+            SuccessPage(
+                modifier = modifier,
+                announcements = homeUiState.announcements!!,
+                roleId = homeUiState.type,
+                homeViewModel = homeViewModel,
+                navController = navController
+            )
+        }
+        UiStatus.Error->{
+            Text(text = "Error: ${homeUiState.errorMessage}, lo siento")
+        }
+        UiStatus.Undefined->{
+            Text(text = "No tienes grupo registrado")
+        }
+        else -> {
+            CheckingScreen()
+        }
     }
 
 }

@@ -1,8 +1,5 @@
 package com.example.guarderia.domain.viewmodel.home
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -11,13 +8,14 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.guarderia.GuarderiaApplication
 import com.example.guarderia.data.AnnouncementsRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val announcementsRepository: AnnouncementsRepository
 ) : ViewModel() {
 
-    var uiState: HomeUiState by mutableStateOf(HomeUiState.Loading)
+    var uiState = MutableStateFlow(HomeUiState(announcements = null))
         private set
 
 
@@ -34,11 +32,13 @@ class HomeViewModel(
                 val user = announcementsRepository.getUser()
                 val announcementResponse =
                     announcementsRepository.getAllAnnouncementsById(tokenEntity.token)
-                uiState = HomeUiState.Success(announcementResponse.notices, user.roleId)
+                uiState.value = HomeUiState(uiStatus = UiStatus.Success, type = user.roleId, announcements = announcementResponse.notices)
             }
 
         }catch (e:Exception){
-            uiState= HomeUiState.Error(e.message?:"")
+            uiState.value = HomeUiState(
+                uiStatus = UiStatus.Error, announcements = null
+            )
         }
 
     }
