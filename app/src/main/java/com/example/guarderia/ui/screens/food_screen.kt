@@ -43,7 +43,7 @@ fun FoodScreen(modifier: Modifier = Modifier, navController: NavController) {
             label = R.string.breakfast,
             color = R.color.breakfastColor
         ) {
-            navController.navigate(Routes.BreakfastRegister.route)
+            navController.navigate(Routes.BreakfastRegister.route+"/desayuno")
         }
         FoodButton(
             modifier = modifier,

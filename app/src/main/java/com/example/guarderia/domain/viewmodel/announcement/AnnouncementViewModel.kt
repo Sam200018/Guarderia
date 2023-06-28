@@ -11,8 +11,8 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.guarderia.GuarderiaApplication
 import com.example.guarderia.data.AnnouncementsRepository
+import com.example.guarderia.data.AuthRepository
 import com.example.guarderia.model.Announcement
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import java.text.SimpleDateFormat
@@ -20,7 +20,8 @@ import java.util.Date
 import java.util.Locale
 
 class AnnouncementViewModel(
-    private val announcementsRepository: AnnouncementsRepository
+    private val announcementsRepository: AnnouncementsRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     var uiState = MutableStateFlow(AnnouncementsUiState())
@@ -67,7 +68,7 @@ class AnnouncementViewModel(
 
     suspend fun sendAnnouncement() {
 
-        val tokenEntity = announcementsRepository.getToken()
+        val tokenEntity = authRepository.getToken()
 //        TODO: get id group
 
         val announcementToSend = Announcement(
@@ -92,8 +93,8 @@ class AnnouncementViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as GuarderiaApplication)
                 val announcementsRepository = application.container.announcementsRepository
-
-                AnnouncementViewModel(announcementsRepository)
+                val authRepository= application.container.authRepository
+                AnnouncementViewModel(announcementsRepository,authRepository)
             }
         }
     }

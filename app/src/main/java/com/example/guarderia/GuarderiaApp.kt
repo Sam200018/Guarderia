@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.guarderia.domain.viewmodel.auth.AuthStatus
 import com.example.guarderia.domain.viewmodel.auth.AuthUiState
 import com.example.guarderia.domain.viewmodel.auth.AuthViewModel
+import com.example.guarderia.domain.viewmodel.foodRegister.FoodRegisterViewModel
 import com.example.guarderia.domain.viewmodel.home.HomeViewModel
 import com.example.guarderia.ui.routes.Routes
 import com.example.guarderia.ui.screens.AddNotice
@@ -104,14 +105,17 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
             composable(Routes.Food.route) {
                 FoodScreen(navController = navController)
             }
-            composable(Routes.BreakfastRegister.route) {
-                FoodRegisterScreen()
+            composable(Routes.BreakfastRegister.route + "/{type}") { navBackStackEntry ->
+                val type = navBackStackEntry.arguments!!.getString("type") ?: ""
+                Log.i("type", type)
+                val foodRegisterViewModel: FoodRegisterViewModel= viewModel(factory = FoodRegisterViewModel.createFactory(type))
+                FoodRegisterScreen(foodRegisterViewModel = foodRegisterViewModel)
             }
             composable(Routes.CollationRegister.route) {
-                FoodRegisterScreen()
+//                FoodRegisterScreen()
             }
             composable(Routes.LunchRegister.route) {
-                FoodRegisterScreen()
+//                FoodRegisterScreen()
             }
 
         }

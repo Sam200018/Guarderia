@@ -6,6 +6,7 @@ import com.example.guarderia.config.AssetManagerUtils
 import com.example.guarderia.local.AuthLocalDB
 import com.example.guarderia.network.AnnouncementsDataSourceRemote
 import com.example.guarderia.network.AuthDataSourceRemote
+import com.example.guarderia.network.IngestionsDataSourceRemote
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
@@ -16,18 +17,23 @@ import retrofit2.converter.gson.GsonConverterFactory
 interface AppContainer {
     val authRepository: AuthRepository
     val announcementsRepository: AnnouncementsRepository
+    val ingestionsRepository: IngestionsRepository
 }
 
 class GuarderiaAppContainer(
     private val context: Context
 ) : AppContainer {
-    //    Asi creamos un data source, para poder hacer peticiones al servicod
+    //    Asi creamos un data source, para poder hacer peticiones al servico
     private val authDataSourceRemote: AuthDataSourceRemote by lazy {
         retrofit.create(AuthDataSourceRemote::class.java)
     }
 
     private val announcementsDataSourceRemote: AnnouncementsDataSourceRemote by lazy {
         retrofit.create(AnnouncementsDataSourceRemote::class.java)
+    }
+
+    private val ingestionsDataSourceRemote: IngestionsDataSourceRemote by lazy {
+        retrofit.create(IngestionsDataSourceRemote::class.java)
     }
 
     private val authLocalDB: AuthLocalDB by lazy {
@@ -75,6 +81,10 @@ class GuarderiaAppContainer(
     }
 
     override val announcementsRepository: AnnouncementsRepository by lazy {
-        AnnouncementsRepositoryImpl(authLocalDB.authDao(),announcementsDataSourceRemote)
+        AnnouncementsRepositoryImpl( announcementsDataSourceRemote)
+    }
+
+    override val ingestionsRepository: IngestionsRepository by lazy {
+        IngestionsRepositoryImpl(ingestionsDataSourceRemote)
     }
 }

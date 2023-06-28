@@ -8,11 +8,14 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.guarderia.GuarderiaApplication
 import com.example.guarderia.data.AnnouncementsRepository
+import com.example.guarderia.data.AuthRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
-    private val announcementsRepository: AnnouncementsRepository
+    private val announcementsRepository: AnnouncementsRepository,
+    private val authRepository: AuthRepository,
 ) : ViewModel() {
 
     var uiState = MutableStateFlow(HomeUiState(announcements = null))
@@ -27,9 +30,10 @@ class HomeViewModel(
 
     suspend fun checkingRole() {
         try {
-            val tokenEntity = announcementsRepository.getToken()
+            delay(3000)
+            val tokenEntity = authRepository.getToken()
             if (tokenEntity != null) {
-                val user = announcementsRepository.getUser()
+                val user = authRepository.getUser()
                 val announcementResponse =
                     announcementsRepository.getAllAnnouncementsById(tokenEntity.token)
                 uiState.value = HomeUiState(uiStatus = UiStatus.Success, type = user.roleId, announcements = announcementResponse.notices)
@@ -48,7 +52,8 @@ class HomeViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as GuarderiaApplication)
                 val announcementsRepository = application.container.announcementsRepository
-                HomeViewModel(announcementsRepository)
+                val authRepository = application.container.authRepository
+                HomeViewModel(announcementsRepository,authRepository)
             }
         }
     }

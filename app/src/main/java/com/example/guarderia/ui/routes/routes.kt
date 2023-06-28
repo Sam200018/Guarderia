@@ -33,9 +33,9 @@ sealed class Routes(
                 "notice/{id}" -> ViewNotice
                 "notes" -> Notes
                 "food" -> Food
-                "breakfastRegister" -> BreakfastRegister
-                "collationRegister" -> CollationRegister
-                "lunchRegister" -> LunchRegister
+                "breakfastRegister/{type}" -> BreakfastRegister
+                "collationRegister/{type}" -> CollationRegister
+                "lunchRegister/{type}" -> LunchRegister
                 else -> Home
             }
         }
