@@ -15,19 +15,27 @@ sealed class Routes(
     object AddNotice : Routes("addNotice", R.string.addNotice)
     object ViewNotice : Routes("notice", R.string.notice)
     object Notes : Routes("notes", R.string.notes, R.drawable.notes_icon)
+    object Food : Routes("food", R.string.food, R.drawable.food_icon)
+    object BreakfastRegister : Routes("breakfastRegister", R.string.breakfast)
+    object CollationRegister : Routes("collationRegister", R.string.collation)
+    object LunchRegister : Routes("lunchRegister", R.string.lunch)
 //    object ReportParentScreen : Routes("reportParent")
 //    object GroupSelectionScreen : Routes("groupSelection")
 
-    companion object{
-        fun fromValue(value: String):Routes{
-            return when(value){
-                "login"->Login
-                "home"->Home
-                "announcement"->Announcement
-                "checking"->Checking
-                "addNotice"->AddNotice
-                "notice/{id}"->ViewNotice
-                "notes"->Notes
+    companion object {
+        fun fromValue(value: String): Routes {
+            return when (value) {
+                "login" -> Login
+                "home" -> Home
+                "announcement" -> Announcement
+                "checking" -> Checking
+                "addNotice" -> AddNotice
+                "notice/{id}" -> ViewNotice
+                "notes" -> Notes
+                "food" -> Food
+                "breakfastRegister" -> BreakfastRegister
+                "collationRegister" -> CollationRegister
+                "lunchRegister" -> LunchRegister
                 else -> Home
             }
         }
