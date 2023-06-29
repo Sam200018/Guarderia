@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Flag
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Flag
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,10 +29,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.guarderia.R
-import com.example.guarderia.domain.viewmodel.auth.AuthViewModel
 import com.example.guarderia.model.Announcement
 import com.example.guarderia.ui.routes.Routes
 
@@ -43,23 +40,15 @@ fun AnnouncementTab(
     modifier: Modifier,
     announcement: Announcement,
     navController: NavHostController,
-    //nextRoute: String
+    roleId: Int
 ) {
-    val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.Factory)
-    val authStatus by authViewModel.uiState.collectAsState()
 
     Card(
         modifier = modifier
             .height(87.dp)
     ) {
         Button(
-            onClick = { navController.navigate(Routes.ViewNotice.route+"/${announcement.id}") }
-            /*onClick = {
-                val nextScreen = when (nextRoute) {
-                    "home" -> Routes.AddNotice
-                    else -> Routes.Home
-                } navController.navigate(nextScreen.route)
-            }*/,
+            onClick = { navController.navigate(Routes.ViewNotice.route+"/${announcement.id}") },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.White
             )
@@ -70,7 +59,7 @@ fun AnnouncementTab(
                     Text(text = announcement.title, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Text(text = announcement.body, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
-                if (authStatus.user?.roleId ==1){
+                if (roleId==1){
                     DotsButton(announcement.id)}
             }
         }

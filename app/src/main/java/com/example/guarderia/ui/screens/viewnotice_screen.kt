@@ -5,4 +5,9 @@ import androidx.compose.runtime.Composable
 @Composable
 fun ViewNoticeScreen(id: String) {
 
+
+
 }
+
+
+

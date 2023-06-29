@@ -64,7 +64,10 @@ class AnnouncementViewModel(
         descriptionInput = description
     }
 
+/*    suspend fun getSingleNoticeByID() {
+        val tokenEntity=announcementsRepository.getToken()
 
+    }*/
     suspend fun sendAnnouncement() {
 
         val tokenEntity = announcementsRepository.getToken()

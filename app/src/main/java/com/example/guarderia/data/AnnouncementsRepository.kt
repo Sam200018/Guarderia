@@ -12,9 +12,13 @@ interface AnnouncementsRepository {
 
     suspend fun getAllAnnouncementsById(token: String): AnnouncementResponse
 
+    suspend fun getSingleNoticeByID(token: String, id: Int): Announcement
+
     suspend fun sendAnnouncement(
         token: String, announcement: Announcement
     )
+
+    companion object
 }
 
 class AnnouncementsRepositoryImpl(
@@ -27,6 +31,11 @@ class AnnouncementsRepositoryImpl(
 
     override suspend fun getAllAnnouncementsById(token: String): AnnouncementResponse =
         announcementsDataSourceRemote.getNoticeById(token)
+
+    override suspend fun getSingleNoticeByID(
+        token: String,
+        id: Int): Announcement =
+        announcementsDataSourceRemote.getSingleNoticeByID(token, id)
 
     override suspend fun sendAnnouncement(
         token: String,
