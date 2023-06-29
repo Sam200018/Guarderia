@@ -14,12 +14,6 @@ interface AnnouncementsDataSourceRemote {
     @GET("allNotices")
     suspend fun getNoticeById(@Header("Authorization") token: String): AnnouncementsResponse
 
-    @GET("getNoticeByID/{id}")
-    suspend fun getSingleNoticeByID(
-        @Header("Authorization") token: String,
-        @Path("id") id: Int
-    ):Announcement
-
     @POST("createNotice")
     suspend fun createNotice(
         @Header("Authorization") token: String,
