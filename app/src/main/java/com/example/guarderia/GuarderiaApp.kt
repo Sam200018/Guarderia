@@ -99,8 +99,7 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
             }
             composable(Routes.ViewNotice.route + "/{id}") { navBackStackEntry ->
                 val announcementId = navBackStackEntry.arguments!!.getString("id")
-                Log.i("id", announcementId.toString())
-                ViewNoticeScreen(announcementId ?: "0")
+                ViewNoticeScreen(id = announcementId ?: "0")
             }
             composable(Routes.Food.route) {
                 FoodScreen(navController = navController)
