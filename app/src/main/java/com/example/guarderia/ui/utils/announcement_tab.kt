@@ -39,7 +39,8 @@ import com.example.guarderia.ui.routes.Routes
 fun AnnouncementTab(
     modifier: Modifier,
     announcement: Announcement,
-    navController: NavHostController
+    navController: NavHostController,
+    roleId: Int
 ) {
 
     Card(
@@ -58,7 +59,8 @@ fun AnnouncementTab(
                     Text(text = announcement.title, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Text(text = announcement.body, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
-                DotsButton(announcement.id)
+                if (roleId==1){
+                    DotsButton(announcement.id)}
             }
         }
     }

@@ -43,6 +43,7 @@ fun HomeScreen(
 ) {
 
 
+
     val homeUiState by homeViewModel.uiState.collectAsState()
     when (homeUiState.uiStatus) {
         UiStatus.Success -> {
@@ -137,7 +138,7 @@ fun SuccessPage(
                     .fillMaxSize()
             ) {
                 items(announcements.size) {
-                    AnnouncementTab(modifier = modifier, announcement = announcements[it],navController)
+                    AnnouncementTab(modifier = modifier, announcement = announcements[it],navController, roleId)
                     Box(modifier.height(10.dp))
                 }
             }
