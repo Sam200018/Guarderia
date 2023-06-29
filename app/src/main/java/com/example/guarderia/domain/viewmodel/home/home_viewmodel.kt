@@ -9,8 +9,9 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.guarderia.GuarderiaApplication
 import com.example.guarderia.data.AnnouncementsRepository
 import com.example.guarderia.data.AuthRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -18,9 +19,8 @@ class HomeViewModel(
     private val authRepository: AuthRepository,
 ) : ViewModel() {
 
-    var uiState = MutableStateFlow(HomeUiState(announcements = null))
-        private set
-
+    private var _uiState = MutableStateFlow(HomeUiState(announcements = null))
+    val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -29,18 +29,22 @@ class HomeViewModel(
     }
 
     suspend fun checkingRole() {
+
         try {
-            delay(3000)
             val tokenEntity = authRepository.getToken()
             if (tokenEntity != null) {
                 val user = authRepository.getUser()
                 val announcementResponse =
                     announcementsRepository.getAllAnnouncementsById(tokenEntity.token)
-                uiState.value = HomeUiState(uiStatus = UiStatus.Success, type = user.roleId, announcements = announcementResponse.notices)
+                _uiState.value = HomeUiState(
+                    uiStatus = UiStatus.Success,
+                    type = user.roleId,
+                    announcements = announcementResponse.notices
+                )
             }
 
-        }catch (e:Exception){
-            uiState.value = HomeUiState(
+        } catch (e: Exception) {
+            _uiState.value = HomeUiState(
                 uiStatus = UiStatus.Error, announcements = null
             )
         }
@@ -53,7 +57,7 @@ class HomeViewModel(
                 val application = (this[APPLICATION_KEY] as GuarderiaApplication)
                 val announcementsRepository = application.container.announcementsRepository
                 val authRepository = application.container.authRepository
-                HomeViewModel(announcementsRepository,authRepository)
+                HomeViewModel(announcementsRepository, authRepository)
             }
         }
     }

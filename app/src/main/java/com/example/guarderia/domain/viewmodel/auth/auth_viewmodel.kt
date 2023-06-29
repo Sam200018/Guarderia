@@ -29,15 +29,13 @@ class AuthViewModel(
         }
     }
 
-    fun login(email: String, password: String) {
+    suspend fun login(email: String, password: String) {
         val loginRequest = LoginRequest(email, password)
-        viewModelScope.launch {
-            try {
-                val response = authRepository.login(loginRequest)
-                setLoggedUser(response)
-            } catch (e: Exception) {
-                logout(e.message)
-            }
+        try {
+            val response = authRepository.login(loginRequest)
+            setLoggedUser(response)
+        } catch (e: Exception) {
+            logout(e.message)
         }
     }
 

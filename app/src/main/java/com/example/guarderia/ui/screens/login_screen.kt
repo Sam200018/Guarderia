@@ -26,16 +26,19 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.guarderia.R
 import com.example.guarderia.domain.viewmodel.auth.AuthViewModel
+import com.example.guarderia.domain.viewmodel.home.HomeViewModel
 import com.example.guarderia.domain.viewmodel.login.LoginViewModel
 import com.example.guarderia.ui.theme.GeneralColor
 import com.example.guarderia.ui.utils.TextFieldError
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun LoginScreen(
     loginViewModel: LoginViewModel = viewModel(),
     authViewModel: AuthViewModel,
+    homeViewModel: HomeViewModel,
     errorMessage: String
-    ) {
+) {
     //Ui State
     val loginUiState by loginViewModel.uiState.collectAsState()
 
@@ -74,7 +77,10 @@ fun LoginScreen(
             Modifier.align(Alignment.CenterHorizontally),
             isEnable = isLoginEnable && isNotEmptyForm && !isLoginError,
             loginClick = {
-                authViewModel.login(loginViewModel.emailInput, loginViewModel.passwordInput)
+                runBlocking {
+                    authViewModel.login(loginViewModel.emailInput, loginViewModel.passwordInput)
+                    homeViewModel.checkingRole()
+                }
             },
             errorMessage = errorMessage,
             isLoading = loginUiState.isFormSubmitting

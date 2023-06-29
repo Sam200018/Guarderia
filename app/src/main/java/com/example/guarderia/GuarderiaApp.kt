@@ -79,7 +79,11 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
 
 
             composable(Routes.Login.route) {
-                LoginScreen(authViewModel = authViewModel, errorMessage = authStatus.errorMessage)
+                LoginScreen(
+                    authViewModel = authViewModel,
+                    homeViewModel = homeViewModel,
+                    errorMessage = authStatus.errorMessage
+                )
 
             }
 
@@ -107,7 +111,8 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
             composable(Routes.BreakfastRegister.route + "/{type}") { navBackStackEntry ->
                 val type = navBackStackEntry.arguments!!.getString("type") ?: ""
                 Log.i("type", type)
-                val foodRegisterViewModel: FoodRegisterViewModel= viewModel(factory = FoodRegisterViewModel.createFactory(type))
+                val foodRegisterViewModel: FoodRegisterViewModel =
+                    viewModel(factory = FoodRegisterViewModel.createFactory(type))
                 FoodRegisterScreen(foodRegisterViewModel = foodRegisterViewModel)
             }
             composable(Routes.CollationRegister.route) {
