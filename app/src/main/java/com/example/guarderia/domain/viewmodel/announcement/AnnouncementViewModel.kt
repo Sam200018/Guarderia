@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.guarderia.GuarderiaApplication
@@ -15,7 +16,11 @@ import com.example.guarderia.data.AuthRepository
 import com.example.guarderia.model.Announcement
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -41,7 +46,7 @@ class AnnouncementViewModel(
 
     fun onTitleChange(title: String) {
         titleInput = title
-        uiState.update {currentState->
+        uiState.update { currentState ->
             currentState.copy(
                 isTitleValid = Regex("^[A-Z0-9].*").matches(titleInput)
             )
@@ -50,9 +55,9 @@ class AnnouncementViewModel(
 
     fun onImportanceChange(importance: Int) {
         importanceInput = importance
-        uiState.update { currentState->
+        uiState.update { currentState ->
             currentState.copy(
-                isImportanceSelected = importanceInput!=0
+                isImportanceSelected = importanceInput != 0
             )
         }
     }
@@ -68,22 +73,60 @@ class AnnouncementViewModel(
 
     suspend fun sendAnnouncement() {
 
-        val tokenEntity = authRepository.getToken()
-//        TODO: get id group
-
-        val announcementToSend = Announcement(
-            importance = importanceInput,
-            date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(dueDateInput),
-            title = titleInput,
-            body = descriptionInput,
-        )
         try {
-            if (tokenEntity != null) {
-                announcementsRepository.sendAnnouncement(tokenEntity.token, announcementToSend)
-            }
+            val tokenEntity = authRepository.getToken()
+
+            val announcementToSend = Announcement(
+                importance = importanceInput,
+                date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(dueDateInput),
+                title = titleInput,
+                body = descriptionInput,
+            )
+            announcementsRepository.sendAnnouncement(tokenEntity!!.token, announcementToSend)
 
         } catch (e: Exception) {
             Log.e("Send Announcement", e.message ?: "")
+        }
+
+    }
+
+    fun loadAnnouncementData(id: String) {
+        viewModelScope.launch {
+            try {
+                val tokenEntity = authRepository.getToken()
+                val noticeResponse = announcementsRepository.getNoticeById(tokenEntity!!.token, id)
+                val notice = noticeResponse.notice
+                onTitleChange(notice.title)
+                onImportanceChange(notice.importance)
+                onDescriptionChange(notice.body)
+
+                val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                val date: LocalDate = LocalDate.parse(notice.date, dateFormatter)
+                val comingDate = Date.from(date.atStartOfDay().toInstant(ZoneOffset.ofHours(-6)))
+                onDueDateChange(comingDate)
+
+            } catch (e: Exception) {
+
+            }
+
+        }
+    }
+
+    suspend fun editAnnouncement(id: String) {
+
+            try {
+                val tokenEntity = authRepository.getToken()
+                val newAnnouncement = Announcement(
+                    importance = importanceInput,
+                    date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(dueDateInput),
+                    title = titleInput,
+                    body = descriptionInput,
+                )
+                Log.i("announce new", newAnnouncement.toString())
+                announcementsRepository.editNotice(tokenEntity!!.token, id, newAnnouncement)
+            } catch (e: Exception) {
+
+
         }
 
     }
@@ -93,8 +136,8 @@ class AnnouncementViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as GuarderiaApplication)
                 val announcementsRepository = application.container.announcementsRepository
-                val authRepository= application.container.authRepository
-                AnnouncementViewModel(announcementsRepository,authRepository)
+                val authRepository = application.container.authRepository
+                AnnouncementViewModel(announcementsRepository, authRepository)
             }
         }
     }
