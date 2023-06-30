@@ -48,7 +48,7 @@ fun AnnouncementTab(
             .height(87.dp)
     ) {
         Button(
-            onClick = { navController.navigate(Routes.ViewNotice.route+"/${announcement.id}") },
+            onClick = { navController.navigate(Routes.ViewNotice.route + "/${announcement.id}") },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.White
             )
@@ -59,8 +59,9 @@ fun AnnouncementTab(
                     Text(text = announcement.title, maxLines = 1, overflow = TextOverflow.Ellipsis)
                     Text(text = announcement.body, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
-                if (roleId==1){
-                    DotsButton(announcement.id)}
+                if (roleId == 1) {
+                    DotsButton(announcement.id,navController)
+                }
             }
         }
     }
@@ -99,7 +100,7 @@ fun ImportanceIcon(modifier: Modifier, importance: Int) {
 }
 
 @Composable
-fun DotsButton(announcementId: Int) {
+fun DotsButton(announcementId: Int, navController: NavHostController) {
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -108,14 +109,18 @@ fun DotsButton(announcementId: Int) {
     }
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
         DropdownMenuItem(onClick = {
-
+            expanded = false
+            navController.navigate(Routes.EditNotice.route+"/$announcementId")
         }) {
             Row() {
                 Icon(Icons.Filled.Edit, contentDescription = "")
                 Text(text = "Editar ")
             }
         }
-        DropdownMenuItem(onClick = { }) {
+        DropdownMenuItem(onClick = {
+            expanded = false
+
+        }) {
             Row() {
                 Icon(Icons.Filled.Delete, contentDescription = "")
                 Text(text = "Eliminar ")
