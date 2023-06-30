@@ -25,9 +25,25 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.guarderia.R
 import com.example.guarderia.ui.routes.Routes
+import java.time.LocalDate
+import java.time.format.TextStyle
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun FoodScreen(modifier: Modifier = Modifier, navController: NavController) {
+    val calendar = Calendar.getInstance()
+    val date = Date()
+    calendar.time = date
+
+    val dayOfWeek = calendar.get(Calendar.DAY_OF_MONTH)
+    val monthOfYear = calendar.get(Calendar.MONTH)
+    val year = calendar.get(Calendar.YEAR)
+    val localDate = LocalDate.of(year, monthOfYear+1, dayOfWeek)
+    val day = localDate.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.forLanguageTag("es"))
+    val dayOfMonth = localDate.dayOfMonth
+    val month = localDate.month.getDisplayName(TextStyle.FULL, Locale.forLanguageTag("es"))
     Column(
         modifier
             .fillMaxWidth()
@@ -36,14 +52,13 @@ fun FoodScreen(modifier: Modifier = Modifier, navController: NavController) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceAround
     ) {
-        Date()
-//        Box(modifier = modifier.height(51.dp))
+        FoodDate(day, dayOfMonth, month)
         FoodButton(
             modifier = modifier,
             label = R.string.breakfast,
             color = R.color.breakfastColor
         ) {
-            navController.navigate(Routes.BreakfastRegister.route+"/desayuno")
+            navController.navigate(Routes.BreakfastRegister.route + "/desayuno")
         }
         FoodButton(
             modifier = modifier,
@@ -65,8 +80,9 @@ fun FoodScreen(modifier: Modifier = Modifier, navController: NavController) {
 }
 
 @Composable
-fun Date() {
-    Text(text = "fecha", fontSize = 28.sp)
+fun FoodDate(dayOfWeek: String, dayOfMonth: Int, month: String) {
+
+    Text(text = "$dayOfWeek $dayOfMonth de $month ", fontSize = 28.sp)
 }
 
 @Composable
