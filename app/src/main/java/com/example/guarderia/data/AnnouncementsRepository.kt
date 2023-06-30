@@ -14,6 +14,8 @@ interface AnnouncementsRepository {
     )
 
     suspend fun getNoticeById(token: String, id: String): AnnouncementResponse
+
+    suspend fun editNotice(token: String, id: String, announcement: Announcement)
 }
 
 class AnnouncementsRepositoryImpl(
@@ -31,7 +33,10 @@ class AnnouncementsRepositoryImpl(
         announcementsDataSourceRemote.createNotice(token, announcement)
 
     override suspend fun getNoticeById(token: String, id: String): AnnouncementResponse =
-        announcementsDataSourceRemote.getNotice(token,id)
+        announcementsDataSourceRemote.getNotice(token, id)
+
+    override suspend fun editNotice(token: String, id: String, announcement: Announcement) =
+        announcementsDataSourceRemote.editNotice(token,id,announcement)
 
 
 }
