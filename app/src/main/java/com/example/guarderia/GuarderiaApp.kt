@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.guarderia.domain.viewmodel.announcement.AnnouncementViewModel
 import com.example.guarderia.domain.viewmodel.auth.AuthStatus
 import com.example.guarderia.domain.viewmodel.auth.AuthUiState
 import com.example.guarderia.domain.viewmodel.auth.AuthViewModel
@@ -20,6 +21,7 @@ import com.example.guarderia.domain.viewmodel.home.HomeViewModel
 import com.example.guarderia.ui.routes.Routes
 import com.example.guarderia.ui.screens.AddNotice
 import com.example.guarderia.ui.screens.CheckingScreen
+import com.example.guarderia.ui.screens.EditAnnouncement
 import com.example.guarderia.ui.screens.FoodRegisterScreen
 import com.example.guarderia.ui.screens.FoodScreen
 import com.example.guarderia.ui.screens.HomeScreen
@@ -104,6 +106,19 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
             composable(Routes.ViewNotice.route + "/{id}") { navBackStackEntry ->
                 val announcementId = navBackStackEntry.arguments!!.getString("id")
                 ViewNoticeScreen(id = announcementId ?: "0")
+            }
+            composable(Routes.EditNotice.route + "/{id}") { navBackStackEntry ->
+                val announcementId = navBackStackEntry.arguments!!.getString("id")
+                val announcementViewModel: AnnouncementViewModel =
+                    viewModel(factory = AnnouncementViewModel.Factory)
+                announcementViewModel.loadAnnouncementData(announcementId ?: "0")
+
+                EditAnnouncement(
+                    navController = navController,
+                    id = announcementId ?: "0",
+                    homeViewModel = homeViewModel,
+                    announcementViewModel = announcementViewModel
+                )
             }
             composable(Routes.Food.route) {
                 FoodScreen(navController = navController)
