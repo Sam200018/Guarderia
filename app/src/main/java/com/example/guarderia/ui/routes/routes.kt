@@ -14,6 +14,7 @@ sealed class Routes(
     object Checking : Routes("checking", R.string.checking)
     object AddNotice : Routes("addNotice", R.string.addNotice)
     object ViewNotice : Routes("notice", R.string.notice)
+    object EditNotice: Routes("editNotice",R.string.editAnnouncement)
     object Notes : Routes("notes", R.string.notes, R.drawable.notes_icon)
     object Food : Routes("food", R.string.food, R.drawable.food_icon)
     object BreakfastRegister : Routes("breakfastRegister", R.string.breakfast)
@@ -31,6 +32,7 @@ sealed class Routes(
                 "checking" -> Checking
                 "addNotice" -> AddNotice
                 "notice/{id}" -> ViewNotice
+                "editNotice/{id}"->EditNotice
                 "notes" -> Notes
                 "food" -> Food
                 "breakfastRegister/{type}" -> BreakfastRegister
