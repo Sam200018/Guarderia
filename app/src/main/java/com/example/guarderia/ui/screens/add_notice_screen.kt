@@ -112,7 +112,7 @@ fun AddNotice(
                     )
                 )
             ) {
-                Text(text = "Enviar anuncio")
+                Text(text = stringResource(id = R.string.sendAnnouncement))
             }
         }
     }
