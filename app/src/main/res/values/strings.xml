@@ -21,6 +21,8 @@
     <string name="announcementImportance2">Baja importancia</string>
     <string name="announcementImportance1">Sin importancia</string>
     <string name="announcementImportance0"> </string>
+    <string name="sendAnnouncement">Enviar anuncio</string>
+    <string name="editAnnouncement">Editar anuncio</string>
     <string name="active_announcements">Activos</string>
     <string name="expired_announcements">Vencidos</string>
     <string name="there_is_not_announcements">No has agregado anuncios</string>
