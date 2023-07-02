@@ -19,4 +19,8 @@
     <color name="breakfastColor">#F3A712</color>
     <color name="collationColor">#EBA3A3</color>
     <color name="lunchColor">#7FB800</color>
+    <color name="absentColor">#C9C1C1</color>
+    <color name="eatingFewColor">#F9FC80</color>
+    <color name="notEatingColor">#F4B0B0</color>
+    <color name="unknown">#EEB7F2</color>
 </resources>
