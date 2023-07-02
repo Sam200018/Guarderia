@@ -6,7 +6,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Ingestion(
     @SerializedName("id_ingestion")
-    val idIngestion:Int,
+    val idIngestion:String,
+    @SerializedName("id_child")
+    val childId:Int,
     val name:String,
     @SerializedName("first_surname")
     val firstSurname: String,
