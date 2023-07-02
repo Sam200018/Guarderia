@@ -1,6 +1,5 @@
 package com.example.guarderia.domain.viewmodel.foodRegister
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -10,9 +9,12 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.guarderia.GuarderiaApplication
 import com.example.guarderia.data.AuthRepository
 import com.example.guarderia.data.IngestionsRepository
+import com.example.guarderia.model.Ingestion
+import com.example.guarderia.model.IngestionRequest
 import com.example.guarderia.model.IngestionsRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -26,22 +28,61 @@ class FoodRegisterViewModel(
         private set
 
     init {
-        getIngestions(type)
+        viewModelScope.launch {
+            getIngestions(type)
+        }
     }
 
-    private fun getIngestions(type: String) {
-        viewModelScope.launch {
+    suspend fun getIngestions(type: String) {
+        try {
+
             val tokenEntity = authRepository.getToken()
             val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-            val ingestionsRequest = IngestionsRequest(type, date )
+            val ingestionsRequest = IngestionsRequest(type, date)
             val ingestionsResponse =
-                ingestionsRepository.getIngestionsByGroup(tokenEntity!!.token, ingestionsRequest)
-            Log.i("Ingestions",ingestionsResponse.toString())
-            if(ingestionsResponse.food!=null && ingestionsResponse.ingestions!=null){
-                uiState.value= FoodRegisterUiState(IngestionStatus.Success, food = ingestionsResponse.food,ingestions = ingestionsResponse.ingestions)
-            }else{
-                uiState.value= FoodRegisterUiState(IngestionStatus.Undefined, food = null,ingestions = null)
+                ingestionsRepository.getIngestionsByGroup(
+                    tokenEntity!!.token,
+                    ingestionsRequest
+                )
+            if (ingestionsResponse.food != null && ingestionsResponse.ingestions != null) {
+                uiState.value = FoodRegisterUiState(
+                    IngestionStatus.Success,
+                    food = ingestionsResponse.food,
+                    ingestions = ingestionsResponse.ingestions
+                )
+            } else {
+                uiState.value = FoodRegisterUiState(
+                    IngestionStatus.Undefined,
+                    food = null,
+                    ingestions = null
+                )
             }
+        } catch (e: Exception) {
+
+        }
+
+    }
+
+    suspend fun recordIngestion(
+        ingestion: Ingestion,
+        gratification: Int,
+        childId: Int,
+        foodId: Int
+    ) {
+        try {
+            val tokenEntity = authRepository.getToken()
+            val ingestionRequest = IngestionRequest(gratification, childId, foodId)
+            if (ingestion.idIngestion == "-1") {
+                ingestionsRepository.recordIngestion(tokenEntity!!.token, ingestionRequest)
+            } else {
+                ingestionsRepository.editIngestion(
+                    tokenEntity!!.token,
+                    ingestion.idIngestion,
+                    ingestionRequest
+                )
+            }
+        } catch (e: Exception) {
+
         }
     }
 
