@@ -66,7 +66,7 @@ fun FoodScreen(modifier: Modifier = Modifier, navController: NavController) {
             color = R.color.collationColor
         ) {
 
-            navController.navigate(Routes.CollationRegister.route)
+            navController.navigate(Routes.CollationRegister.route+ "/colacion")
         }
         FoodButton(
             modifier = modifier,
@@ -74,7 +74,7 @@ fun FoodScreen(modifier: Modifier = Modifier, navController: NavController) {
             color = R.color.lunchColor
         ) {
 
-            navController.navigate(Routes.LunchRegister.route)
+            navController.navigate(Routes.LunchRegister.route+"/almuerzo")
         }
     }
 }
