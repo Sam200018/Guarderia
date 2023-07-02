@@ -128,13 +128,19 @@ fun GuarderiaApp(modifier: Modifier = Modifier) {
                 Log.i("type", type)
                 val foodRegisterViewModel: FoodRegisterViewModel =
                     viewModel(factory = FoodRegisterViewModel.createFactory(type))
-                FoodRegisterScreen(foodRegisterViewModel = foodRegisterViewModel)
+                FoodRegisterScreen(foodRegisterViewModel = foodRegisterViewModel, type = type)
             }
-            composable(Routes.CollationRegister.route) {
-//                FoodRegisterScreen()
+            composable(Routes.CollationRegister.route + "/{type}") { navBackStackEntry ->
+                val type = navBackStackEntry.arguments!!.getString("type") ?: ""
+                val foodRegisterViewModel: FoodRegisterViewModel =
+                    viewModel(factory = FoodRegisterViewModel.createFactory(type))
+                FoodRegisterScreen(foodRegisterViewModel = foodRegisterViewModel, type = type)
             }
-            composable(Routes.LunchRegister.route) {
-//                FoodRegisterScreen()
+            composable(Routes.LunchRegister.route+ "/{type}") {navBackStackEntry ->
+                val type = navBackStackEntry.arguments!!.getString("type") ?: ""
+                val foodRegisterViewModel: FoodRegisterViewModel =
+                    viewModel(factory = FoodRegisterViewModel.createFactory(type))
+                FoodRegisterScreen(foodRegisterViewModel = foodRegisterViewModel, type = type)
             }
 
         }
