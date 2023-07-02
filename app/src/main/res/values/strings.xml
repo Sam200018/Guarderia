@@ -35,4 +35,8 @@
     <string name="breakfast">Desayuno</string>
     <string name="collation">Colacion</string>
     <string name="lunch">Almuerzo</string>
+    <string name="eatAll">Comio todo</string>
+    <string name="eatFew">Comio poco</string>
+    <string name="notEat">No comio</string>
+    <string name="absent">No asistio</string>
 </resources>
