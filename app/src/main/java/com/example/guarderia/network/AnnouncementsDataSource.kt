@@ -4,6 +4,7 @@ import com.example.guarderia.model.Announcement
 import com.example.guarderia.model.AnnouncementResponse
 import com.example.guarderia.model.AnnouncementsResponse
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
@@ -32,5 +33,11 @@ interface AnnouncementsDataSourceRemote {
         @Header("Authorization") token: String,
         @Path("id_notice") id: String,
         @Body announcement: Announcement
+    )
+
+    @DELETE("destroyNotice/{id_notice}")
+    suspend fun deleteNotice(
+        @Header("Authorization") token: String,
+        @Path("id_notice") id: Int
     )
 }
