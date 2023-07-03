@@ -51,6 +51,15 @@ class HomeViewModel(
 
     }
 
+    suspend fun deleteAnnouncement(id:Int){
+        try {
+            val tokenEntity= authRepository.getToken()
+            announcementsRepository.deleteNotice(tokenEntity!!.token,id)
+        }catch (e:Exception){
+
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
