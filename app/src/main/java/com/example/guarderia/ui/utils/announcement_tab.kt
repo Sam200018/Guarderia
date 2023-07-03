@@ -31,8 +31,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.guarderia.R
+import com.example.guarderia.domain.viewmodel.home.HomeViewModel
 import com.example.guarderia.model.Announcement
 import com.example.guarderia.ui.routes.Routes
+import kotlinx.coroutines.runBlocking
 
 
 @Composable
@@ -40,7 +42,8 @@ fun AnnouncementTab(
     modifier: Modifier,
     announcement: Announcement,
     navController: NavHostController,
-    roleId: Int
+    roleId: Int,
+    homeViewModel: HomeViewModel
 ) {
 
     Card(
@@ -60,7 +63,7 @@ fun AnnouncementTab(
                     Text(text = announcement.body, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
                 if (roleId == 1) {
-                    DotsButton(announcement.id,navController)
+                    DotsButton(announcement.id, navController, homeViewModel)
                 }
             }
         }
@@ -100,7 +103,11 @@ fun ImportanceIcon(modifier: Modifier, importance: Int) {
 }
 
 @Composable
-fun DotsButton(announcementId: Int, navController: NavHostController) {
+fun DotsButton(
+    announcementId: Int,
+    navController: NavHostController,
+    homeViewModel: HomeViewModel
+) {
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -110,19 +117,22 @@ fun DotsButton(announcementId: Int, navController: NavHostController) {
     DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
         DropdownMenuItem(onClick = {
             expanded = false
-            navController.navigate(Routes.EditNotice.route+"/$announcementId")
+            navController.navigate(Routes.EditNotice.route + "/$announcementId")
         }) {
             Row() {
-                Icon(Icons.Filled.Edit, contentDescription = "")
+                Icon(Icons.Filled.Edit, contentDescription = "", tint = colorResource(id = R.color.mediumImportance))
                 Text(text = "Editar ")
             }
         }
         DropdownMenuItem(onClick = {
-            expanded = false
-
+            runBlocking {
+                homeViewModel.deleteAnnouncement(announcementId)
+                homeViewModel.checkingRole()
+                expanded = false
+            }
         }) {
             Row() {
-                Icon(Icons.Filled.Delete, contentDescription = "")
+                Icon(Icons.Filled.Delete, contentDescription = "", tint = colorResource(id = R.color.deleteColor))
                 Text(text = "Eliminar ")
             }
         }

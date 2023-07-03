@@ -54,12 +54,15 @@ fun HomeScreen(
                 navController = navController
             )
         }
-        UiStatus.Error->{
+
+        UiStatus.Error -> {
             Text(text = "Error: ${homeUiState.errorMessage}, lo siento")
         }
-        UiStatus.Undefined->{
+
+        UiStatus.Undefined -> {
             Text(text = "No tienes grupo registrado")
         }
+
         else -> {
             CheckingScreen()
         }
@@ -87,7 +90,7 @@ fun SuccessPage(
         }
     }
     SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = refreshing), onRefresh = {
-            refreshing = true
+        refreshing = true
     }) {
 
 
@@ -120,8 +123,8 @@ fun SuccessPage(
             }
 
 
-            if (announcements.isEmpty()){
-                LazyColumn(modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center){
+            if (announcements.isEmpty()) {
+                LazyColumn(modifier.fillMaxWidth(), verticalArrangement = Arrangement.Center) {
                     item {
                         Text(
                             text = stringResource(id = R.string.there_is_not_announcements),
@@ -130,17 +133,23 @@ fun SuccessPage(
                         )
                     }
                 }
-            }else{
+            } else {
 
-            LazyColumn(
-                modifier
-                    .fillMaxSize()
-            ) {
-                items(announcements.size) {
-                    AnnouncementTab(modifier = modifier, announcement = announcements[it],navController, roleId)
-                    Box(modifier.height(10.dp))
+                LazyColumn(
+                    modifier
+                        .fillMaxSize()
+                ) {
+                    items(announcements.size) {
+                        AnnouncementTab(
+                            modifier = modifier,
+                            announcement = announcements[it],
+                            navController,
+                            roleId,
+                            homeViewModel
+                        )
+                        Box(modifier.height(10.dp))
+                    }
                 }
-            }
             }
         }
     }
