@@ -1,3 +1,42 @@
 <resources>
     <string name="app_name">Guarderia</string>
+    <string name="checking" />
+    <!--    Login-->
+    <string name="welcome_message">¡Bienvenido!</string>
+    <string name="email_input_label">Correo electrónico</string>
+    <string name="password_input_label">Contraseña</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="login_button_label">Iniciar sesión</string>
+    <string name="wrong_credentials">Credenciales incorrectas</string>
+    <string name="not_user">El usuario no existe</string>
+    <string name="login"> </string>
+    <!--    Home-->
+    <string name="announcements">Anuncios</string>
+    <string name="addNotice">Crear anuncio</string>
+    <string name="notice">Anuncio</string>
+    <string name="announcementTitle">Titulo</string>
+    <string name="announcementDescription">Descripcion</string>
+    <string name="announcementImportance4">Alta importancia</string>
+    <string name="announcementImportance3">Media importancia</string>
+    <string name="announcementImportance2">Baja importancia</string>
+    <string name="announcementImportance1">Sin importancia</string>
+    <string name="announcementImportance0"> </string>
+    <string name="sendAnnouncement">Enviar anuncio</string>
+    <string name="editAnnouncement">Editar anuncio</string>
+    <string name="active_announcements">Activos</string>
+    <string name="expired_announcements">Vencidos</string>
+    <string name="there_is_not_announcements">No has agregado anuncios</string>
+    <!--    Notes-->
+    <string name="notes">Notas</string>
+
+
+    <!--    Food-->
+    <string name="food">Comidas</string>
+    <string name="breakfast">Desayuno</string>
+    <string name="collation">Colacion</string>
+    <string name="lunch">Almuerzo</string>
+    <string name="eatAll">Comio todo</string>
+    <string name="eatFew">Comio poco</string>
+    <string name="notEat">No comio</string>
+    <string name="absent">No asistio</string>
 </resources>

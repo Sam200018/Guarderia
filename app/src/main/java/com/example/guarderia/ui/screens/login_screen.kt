@@ -10,57 +10,64 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.guarderia.domain.viewmodel.LoginViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.guarderia.R
+import com.example.guarderia.domain.viewmodel.auth.AuthViewModel
+import com.example.guarderia.domain.viewmodel.home.HomeViewModel
+import com.example.guarderia.domain.viewmodel.login.LoginViewModel
 import com.example.guarderia.ui.theme.GeneralColor
 import com.example.guarderia.ui.utils.TextFieldError
+import kotlinx.coroutines.runBlocking
 
 @Composable
-fun LoginScreen(loginViewModel: LoginViewModel) {
-    Box(
+fun LoginScreen(
+    loginViewModel: LoginViewModel = viewModel(),
+    authViewModel: AuthViewModel,
+    homeViewModel: HomeViewModel,
+    errorMessage: String
+) {
+    //Ui State
+    val loginUiState by loginViewModel.uiState.collectAsState()
+
+
+    val isLoginEnable = (loginUiState.isEmailValid && loginUiState.isPasswordValid)
+    val isNotEmptyForm =
+        (loginViewModel.emailInput.isNotEmpty() && loginViewModel.passwordInput.isNotEmpty())
+    val isLoginError = loginUiState.isFailure
+
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp)
+            .padding(horizontal = 20.dp)
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Center
     ) {
-        Body(modifier = Modifier.align(Alignment.Center), loginViewModel)
-    }
-}
-
-@Composable
-fun Body(
-    modifier: Modifier,
-    loginViewModel: LoginViewModel,
-) {
-
-
-    val email: String by loginViewModel.email.observeAsState(initial = "")
-    val isEmailValid: Boolean by loginViewModel.isEmailValid.observeAsState(true)
-    val password: String by loginViewModel.password.observeAsState(initial = "")
-    val isPasswordValid: Boolean by loginViewModel.isPasswordValid.observeAsState(true)
-    val isLoginEnable: Boolean by loginViewModel.isLoginEnable.observeAsState(initial = false)
-    val isPasswordVisible: Boolean by loginViewModel.isPasswordVisible.observeAsState(initial = false)
-    val errorMessage: String by loginViewModel.errorMessage.observeAsState("")
-
-
-    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         LogoImage()
         Spacer(modifier = Modifier.size(95.dp))
-        UserInput(email, isEmailValid) {
-            loginViewModel.onLoginChange(it)
+        UserInput(loginViewModel.emailInput, loginUiState.isEmailValid) {
+            loginViewModel.onEmailChange(it)
         }
         Spacer(modifier = Modifier.size(40.dp))
-        PasswordInput(loginViewModel, password, isPasswordVisible, isPasswordValid) {
+        PasswordInput(
+            loginViewModel,
+            loginViewModel.passwordInput,
+            loginUiState.isPasswordVisible,
+            loginUiState.isPasswordValid
+        ) {
             loginViewModel.onPasswordChange(it)
         }
         Spacer(modifier = Modifier.size(5.dp))
@@ -68,13 +75,15 @@ fun Body(
         Spacer(modifier = Modifier.size(20.dp))
         LoginButton(
             Modifier.align(Alignment.CenterHorizontally),
-            isEnable = isLoginEnable,
+            isEnable = isLoginEnable && isNotEmptyForm && !isLoginError,
             loginClick = {
-                loginViewModel.login()
-//                reportCarerViewMode(
-
+                runBlocking {
+                    authViewModel.login(loginViewModel.emailInput, loginViewModel.passwordInput)
+                    homeViewModel.checkingRole()
+                }
             },
-            errorMessage = errorMessage
+            errorMessage = errorMessage,
+            isLoading = loginUiState.isFormSubmitting
         )
 
     }
@@ -87,23 +96,24 @@ fun LogoImage() {
         contentAlignment = Alignment.Center, modifier = Modifier
             .fillMaxWidth()
     ) {
-        Text(text = "¡BIENVENIDO!", fontSize = 30.sp)
+        Text(text = stringResource(id = R.string.welcome_message), fontSize = 30.sp)
     }
 }
 
 @Composable
 fun UserInput(email: String, isEmailValid: Boolean, onTextChange: (String) -> Unit) {
     Column {
-        TextField(value = email,
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+        OutlinedTextField(
+            value = email,
             onValueChange = onTextChange,
+            isError = !isEmailValid,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier.fillMaxWidth(),
             label = {
-                Text(text = "Usuario")
-            })
-        if (!isEmailValid) {
-            TextFieldError(message = "Usuario no valido")
-        }
+                Text(text = stringResource(id = R.string.email_input_label))
+            },
+
+            )
     }
 }
 
@@ -116,43 +126,37 @@ fun PasswordInput(
     onTextChange: (String) -> Unit
 ) {
 
-    Column {
-        TextField(value = password,
-            visualTransformation = if (isPasswordVisibility) {
-
-                VisualTransformation.None
+    OutlinedTextField(
+        value = password,
+        isError = !isPasswordValid,
+        onValueChange = onTextChange,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        modifier = Modifier.fillMaxWidth(),
+        trailingIcon = {
+            val image = if (isPasswordVisibility) {
+                Icons.Filled.VisibilityOff
             } else {
-                PasswordVisualTransformation()
+                Icons.Filled.Visibility
+            }
 
-            },
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            onValueChange = onTextChange,
-            modifier = Modifier.fillMaxWidth(),
-            trailingIcon = {
+            IconButton(onClick = { loginViewModel.onPasswordVisibilityChange() }) {
+                Icon(
+                    image,
+                    contentDescription = "Change password visibility"
+                )
 
-                val image = if (isPasswordVisibility) {
-                    Icons.Filled.VisibilityOff
-                } else {
-                    Icons.Filled.Visibility
-                }
-
-                IconButton(onClick = { loginViewModel.onPasswordVisibilityChange() }) {
-                    Icon(
-                        image,
-                        contentDescription = "Change password visibility"
-                    )
-
-                }
-            },
-//        trailingIcon = PasswordVisibility(loginViewModel),
-            label = {
-                Text(text = "Contraseña")
-            })
-        if (!isPasswordValid) {
-            TextFieldError(message = "Contraseña no valida")
+            }
+        },
+        label = {
+            Text(text = stringResource(id = R.string.password_input_label))
+        },
+        visualTransformation = if (isPasswordVisibility) {
+            VisualTransformation.None
+        } else {
+            PasswordVisualTransformation()
         }
+    )
 
-    }
 }
 
 @Composable
@@ -163,28 +167,41 @@ fun ForgetPassword(modifier: Modifier) {
             backgroundColor = Color.Transparent
         )
     ) {
-        Text(text = "¿Olvidaste tu contraseña?", textDecoration = TextDecoration.Underline)
+        Text(
+            text = stringResource(id = R.string.forgot_password),
+            textDecoration = TextDecoration.Underline
+        )
 
     }
 
 }
 
 @Composable
-fun LoginButton(modifier: Modifier, isEnable: Boolean, loginClick: () -> Unit, errorMessage: String) {
+fun LoginButton(
+    modifier: Modifier,
+    isEnable: Boolean,
+    loginClick: () -> Unit,
+    errorMessage: String,
+    isLoading: Boolean
+) {
     Column(modifier) {
 
-        Button(
-            enabled = isEnable,
-            onClick = loginClick,
-            modifier = modifier
-                .size(width = 250.dp, height = 50.dp)
-                .clip(CircleShape),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = GeneralColor
-            )
+        if (isLoading) {
+            CircularProgressIndicator()
+        } else {
+            Button(
+                enabled = isEnable,
+                onClick = loginClick,
+                modifier = modifier
+                    .size(width = 250.dp, height = 50.dp)
+                    .clip(CircleShape),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = GeneralColor
+                )
 
-        ) {
-            Text(text = "Iniciar sesión", fontSize = 24.sp)
+            ) {
+                Text(text = stringResource(id = R.string.login_button_label), fontSize = 24.sp)
+            }
         }
         if (errorMessage.isNotEmpty()) {
             TextFieldError(errorMessage)

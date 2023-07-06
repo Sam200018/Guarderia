@@ -12,11 +12,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import com.example.guarderia.domain.viewmodel.ReportCarerViewModel
 import com.example.guarderia.ui.theme.GeneralColor
 
 @Composable
-fun OnSaveDialog(openSaveDayReportDialog: MutableState<Boolean>, reportCarerViewModel: ReportCarerViewModel) {
+fun OnSaveDialog(openSaveDayReportDialog: MutableState<Boolean>, ) {
 
 
     if (openSaveDayReportDialog.value) {
@@ -37,7 +36,6 @@ fun OnSaveDialog(openSaveDayReportDialog: MutableState<Boolean>, reportCarerView
                 Button(colors = ButtonDefaults.buttonColors(
                     backgroundColor = GeneralColor
                 ), onClick = {
-                  reportCarerViewModel.saveDayReport()
                     openSaveDayReportDialog.value=false
                 }) {
                     Text(text = "Aceptar")
