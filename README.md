@@ -13,9 +13,9 @@ A team project for the Native App Design course in College
 
 Install my app download the repo and open the project in Android Studio
 
-Then install all the dependecies go to:
+Then install all the dependencies go to:
 
-- Buid > Rebuild project
+- Build > Rebuild project
 
 in tools
 
